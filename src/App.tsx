@@ -1,8 +1,13 @@
 import { useState, useRef } from "react";
+import ReactGA from 'react-ga'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+
+ReactGA.initialize("G-7RV8JZXMCF")
+ReactGA.pageview(window.location.pathname + window.location.search);
+
 
 function App() {
     const tipsInDollarRef = useRef<HTMLInputElement>(null);
