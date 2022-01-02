@@ -2,6 +2,7 @@
   "name": "split-check",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://cyh0530.github.io/split",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
