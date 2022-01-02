@@ -180,6 +180,7 @@ function App() {
                     label="Your price"
                     id="stuffPrice"
                     onChange={onStuffPriceChange}
+                    required
                 />
                 <Typography>
                     You should pay {stuffPrice.toFixed(2)} * (
