@@ -1,83 +1,30 @@
-import { useState, useRef } from "react";
-import ReactGA from 'react-ga'
+import { useState, useRef, useEffect, useCallback } from "react";
+import ReactGA from "react-ga";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 
-ReactGA.initialize("G-7RV8JZXMCF")
+ReactGA.initialize("G-7RV8JZXMCF");
 ReactGA.pageview(window.location.pathname + window.location.search);
-
 
 function App() {
     const tipsInDollarRef = useRef<HTMLInputElement>(null);
     const tipsInPercentageRef = useRef<HTMLInputElement>(null);
     const totalWithTipsRef = useRef<HTMLInputElement>(null);
+    const [subtotal, setSubtotal] = useState(0);
     const [tax, setTax] = useState(0);
-    const [taxRate, setTaxRate] = useState(0);
     const [tipsRate, setTipsRate] = useState(0);
     const [tips, setTips] = useState(0);
-    const [totalWithoutTax, setTotalWithoutTax] = useState(0);
-    const [totalWithoutTips, setTotalWithoutTips] = useState(0);
+    const [fees, setFees] = useState(0);
+    const [discount, setDiscount] = useState(0);
     const [stuffPrice, setStuffPrice] = useState(0);
-    const [userPrice, setUserPrice] = useState(0);
-
-    const updateSubtotal = (e: any) => {
-        const value = parseFloat(e.target.value) || 0;
-        setTotalWithoutTax(value);
-        setTotalWithoutTips(value + tax);
-    };
-
-    const updateTax = (e: any) => {
-        const value = parseFloat(e.target.value) || 0;
-        setTax(value);
-        setTotalWithoutTips(totalWithoutTax + value);
-        if (value !== 0) {
-            setTaxRate((value / totalWithoutTax) * 100);
-        } else {
-            setTaxRate(0);
-        }
-    };
-
-    const updateTips = (
-        type: "dollar" | "percentage" | "total",
-        amount: string
-    ) => {
-        const value = parseFloat(amount) || 0;
-        if (value === 0) {
-            setTips(0);
-            setTipsRate(0);
-        } else if (type === "dollar") {
-            setTips(value);
-            setTipsRate((value / totalWithoutTax) * 100);
-            clearTipsInPercentage();
-            clearTotalWithTips();
-            updateUserPrice(stuffPrice);
-        } else if (type === "percentage") {
-            setTips(totalWithoutTax * value * 0.01);
-            setTipsRate(value);
-            clearTipsInDollar();
-            clearTotalWithTips();
-            updateUserPrice(stuffPrice);
-        } else {
-            // total
-            const tempTips = value - totalWithoutTips;
-            setTips(tempTips);
-            setTipsRate((tempTips / totalWithoutTax) * 100);
-            clearTipsInDollar();
-            clearTipsInPercentage();
-            updateUserPrice(stuffPrice);
-        }
-    };
+    const [isTipTotal, setIsTipTotal] = useState(false);
+    const [totalWithTipsPrice, setTotalWithTipsPrice] = useState(0);
 
     const onStuffPriceChange = (e: any) => {
         const value = parseFloat(e.target.value) || 0;
         setStuffPrice(value);
-        updateUserPrice(value);
-    };
-
-    const updateUserPrice = (userPrice: number) => {
-        setUserPrice(userPrice * (1 + (taxRate + tipsRate) * 0.01));
     };
 
     const clearTipsInDollar = () => {
@@ -98,6 +45,84 @@ function App() {
         }
     };
 
+    const getTaxRate = () => {
+        if (subtotal === 0) {
+            return 0;
+        }
+        return (tax / subtotal) * 100;
+    };
+
+    const getTotalWithTax = useCallback(() => {
+        return subtotal + tax;
+    }, [subtotal, tax]);
+
+    const getTotalWithDiscount = useCallback(() => {
+        return getTotalWithTax() + fees - discount;
+    }, [getTotalWithTax, fees, discount]);
+
+    const getTotalWithTips = () => {
+        return getTotalWithDiscount() + tips;
+    };
+
+    const getUserPrice = () => {
+        if (subtotal === 0) {
+            return 0;
+        }
+        const stuffWithTaxTips =
+            stuffPrice * (1 + (getTaxRate() + tipsRate) * 0.01);
+        const userFee = (stuffPrice / subtotal) * fees;
+        const userDiscount = (stuffPrice / subtotal) * discount;
+        return stuffWithTaxTips + userFee - userDiscount;
+    };
+
+    const updateTips = useCallback((
+        type: "dollar" | "percentage" | "total",
+        amount: string
+    ) => {
+        const value = parseFloat(amount) || 0;
+        console.log("hi");
+        if (value === 0) {
+            setTips(0);
+            setTipsRate(0);
+            setIsTipTotal(false);
+        } else if (type === "dollar") {
+            setTips(value);
+            setTipsRate((value / subtotal) * 100);
+            clearTipsInPercentage();
+            clearTotalWithTips();
+            setIsTipTotal(false);
+        } else if (type === "percentage") {
+            setTips(subtotal * value * 0.01);
+            setTipsRate(value);
+            clearTipsInDollar();
+            clearTotalWithTips();
+            setIsTipTotal(false);
+        } else {
+            // total
+            const tempTips = value - getTotalWithDiscount();
+            setTips(tempTips);
+            setTipsRate((tempTips / subtotal) * 100);
+            clearTipsInDollar();
+            clearTipsInPercentage();
+            setIsTipTotal(true);
+            setTotalWithTipsPrice(value);
+        }
+    }, [subtotal, getTotalWithDiscount]);
+
+    useEffect(() => {
+        if (isTipTotal) {
+            updateTips("total", totalWithTipsPrice.toString());
+        }
+    }, [
+        subtotal,
+        tax,
+        fees,
+        discount,
+        isTipTotal,
+        totalWithTipsPrice,
+        updateTips,
+    ]);
+
     return (
         <div>
             <Typography variant="h5" align="center" sx={{ margin: "10px 0" }}>
@@ -116,21 +141,66 @@ function App() {
                     label="Subtotal"
                     id="subtotal"
                     required
-                    onChange={updateSubtotal}
+                    onChange={(e) => {
+                        setSubtotal(parseFloat(e.target.value) || 0);
+                    }}
                 />
-                <TextField label="Tax" id="tax" required onChange={updateTax} />
+                <TextField
+                    label="Tax"
+                    id="tax"
+                    required
+                    onChange={(e) => {
+                        setTax(parseFloat(e.target.value) || 0);
+                    }}
+                />
             </Box>
+            <Typography>Subtotal = ${subtotal.toFixed(2) || ""}</Typography>
             <Typography>
-                Subtotal = ${totalWithoutTax.toFixed(2) || ""}
+                Tax = ${tax.toFixed(2) || ""} ({getTaxRate().toFixed(2)}%)
             </Typography>
             <Typography>
-                Tax = ${tax.toFixed(2) || ""} ({taxRate.toFixed(2)}%)
-            </Typography>
-            <Typography>
-                Total Without Tips = ${(totalWithoutTax + tax).toFixed(2) || ""}
+                Total with Tax = ${(subtotal + tax).toFixed(2) || ""}
             </Typography>
             <Divider sx={{ margin: "10px 0" }} />
-            <Typography variant="h6">Step 2: Pick one to fill in</Typography>
+            <Typography variant="h6">
+                Step 2: Other Fees / Discounts (Optional)
+            </Typography>
+            <Box
+                component="form"
+                sx={{
+                    "& .MuiTextField-root": { m: 1, width: "25ch" },
+                }}
+                noValidate
+                autoComplete="off"
+            >
+                <TextField
+                    label="Fees"
+                    id="fees"
+                    inputRef={tipsInDollarRef}
+                    onChange={(e) => {
+                        setFees(parseFloat(e.target.value) || 0);
+                    }}
+                />
+                <TextField
+                    label="Discounts"
+                    id="discount"
+                    inputRef={tipsInDollarRef}
+                    onChange={(e) => {
+                        setDiscount(parseFloat(e.target.value) || 0);
+                    }}
+                />
+            </Box>
+            <Typography>Fees = {fees.toFixed(2)}</Typography>
+            <Typography>Discounts = {discount.toFixed(2)}</Typography>
+            <Typography>
+                Total + Fees - Discounts <br /> = {getTotalWithTax().toFixed(2)} +{" "}
+                {fees.toFixed(2)} - {discount.toFixed(2)} ={" "}
+                {getTotalWithDiscount().toFixed(2)}
+            </Typography>
+            <Divider sx={{ margin: "10px 0" }} />
+            <Typography variant="h6">
+                Step 3: Pick One to Fill In for Tips
+            </Typography>
             <Box
                 component="form"
                 sx={{
@@ -168,11 +238,11 @@ function App() {
                 Tips = {tips.toFixed(2)} ({tipsRate.toFixed(2)}%)
             </Typography>
             <Typography>
-                Total = {totalWithoutTips.toFixed(2)} + {tips.toFixed(2)} ={" "}
-                {(totalWithoutTips + tips).toFixed(2)}{" "}
+                Total = {getTotalWithDiscount().toFixed(2)} + {tips.toFixed(2)}{" "}
+                = {getTotalWithTips().toFixed(2)}{" "}
             </Typography>
             <Divider sx={{ margin: "10px 0" }} />
-            <Typography variant="h6">Step 3: Price for you</Typography>
+            <Typography variant="h6">Step 4: Price For You</Typography>
             <Box
                 component="form"
                 sx={{
@@ -188,12 +258,33 @@ function App() {
                     required
                 />
                 <Typography>
-                    You should pay {stuffPrice.toFixed(2)} * (
-                    {taxRate.toFixed(2)} + {tipsRate.toFixed(2)})% =
+                    Your price = {stuffPrice.toFixed(2).padStart(6)} <br />
+                    {fees && subtotal ? (
+                        <>
+                            &emsp;&emsp;&nbsp;Fees ={" "}
+                            {(fees * (stuffPrice / subtotal)).toFixed(2).padStart(6)}
+                            <br />
+                        </>
+                    ) : null}
+                    {discount && subtotal ? (
+                        <>
+                            &nbsp;Discount = -
+                            {(discount * (stuffPrice / subtotal)).toFixed(2)}
+                            <br />
+                        </>
+                    ) : null}
+                    &emsp;&emsp;&ensp;Tax ={" "}
+                    {(stuffPrice * (0.01 * getTaxRate())).toFixed(2)}
+                    <br />
+                    &emsp;&emsp;&nbsp;Tips ={" "}
+                    {(stuffPrice * (0.01 * tipsRate)).toFixed(2)}
+                    <br />
+                    &emsp;&emsp;Total =
                 </Typography>
                 <Typography variant="h5" align="center">
-                    ${userPrice.toFixed(2)}
+                    ${getUserPrice().toFixed(2)}
                 </Typography>
+                <div style={{height: "20px"}}></div>
             </Box>
         </div>
     );
