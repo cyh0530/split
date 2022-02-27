@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { evaluate } from "mathjs";
 import ReactGA from "react-ga";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -23,7 +24,7 @@ function App() {
     const [totalWithTipsPrice, setTotalWithTipsPrice] = useState(0);
 
     const onStuffPriceChange = (e: any) => {
-        const value = parseFloat(e.target.value) || 0;
+        const value = evaluate(e.target.value) || 0;
         setStuffPrice(value);
     };
 
@@ -79,7 +80,7 @@ function App() {
         type: "dollar" | "percentage" | "total",
         amount: string
     ) => {
-        const value = parseFloat(amount) || 0;
+        const value = evaluate(amount) || 0;
         console.log("hi");
         if (value === 0) {
             setTips(0);
@@ -142,7 +143,7 @@ function App() {
                     id="subtotal"
                     required
                     onChange={(e) => {
-                        setSubtotal(parseFloat(e.target.value) || 0);
+                        setSubtotal(evaluate(e.target.value) || 0);
                     }}
                 />
                 <TextField
@@ -150,7 +151,7 @@ function App() {
                     id="tax"
                     required
                     onChange={(e) => {
-                        setTax(parseFloat(e.target.value) || 0);
+                        setTax(evaluate(e.target.value) || 0);
                     }}
                 />
             </Box>
@@ -178,7 +179,7 @@ function App() {
                     id="fees"
                     inputRef={tipsInDollarRef}
                     onChange={(e) => {
-                        setFees(parseFloat(e.target.value) || 0);
+                        setFees(evaluate(e.target.value) || 0);
                     }}
                 />
                 <TextField
@@ -186,9 +187,10 @@ function App() {
                     id="discount"
                     inputRef={tipsInDollarRef}
                     onChange={(e) => {
-                        setDiscount(parseFloat(e.target.value) || 0);
+                        setDiscount(evaluate(e.target.value) || 0);
                     }}
                 />
+                <Typography color="gray" sx={{fontSize: "0.75rem"}}>Note: You can type expression</Typography>
             </Box>
             <Typography>Fees = {fees.toFixed(2)}</Typography>
             <Typography>Discounts = {discount.toFixed(2)}</Typography>
@@ -257,6 +259,7 @@ function App() {
                     onChange={onStuffPriceChange}
                     required
                 />
+                <Typography color="gray" sx={{fontSize: "0.75rem"}}>Note: You can type expression</Typography>
                 <Typography>
                     Your price = {stuffPrice.toFixed(2).padStart(6)} <br />
                     {fees && subtotal ? (
