@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { localStoragePartyKey } from "../constants";
+import { getPartyFromLocalStorage } from "../utils/getPartyFromLocalStorage";
 
 interface ScanAddPartyProps {
   open: boolean;
@@ -73,20 +74,8 @@ export function ScanAddParty({
   };
 
   const handleSave = () => {
-    var partiesJson: string[][];
-
-    var localStorageParitesString = localStorage.getItem(localStoragePartyKey);
-    if (localStorageParitesString) {
-      try {
-        partiesJson = JSON.parse(localStorageParitesString) as string[][];
-        // add at the very top of the list
-        partiesJson.unshift(newParty);
-      } catch {
-        partiesJson = [newParty];
-      }
-    } else {
-      partiesJson = [newParty];
-    }
+    var partiesJson = getPartyFromLocalStorage();
+    partiesJson.unshift(newParty);
     localStorage.setItem(localStoragePartyKey, JSON.stringify(partiesJson));
     setShowSuccessSnackbar(true);
     handleCloseModal();
