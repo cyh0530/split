@@ -14,10 +14,10 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { ScanAddParty } from "./ScanAddParty";
-import { getPartyFromLocalStorage } from "../utils/getPartyFromLocalStorage";
-import { localStoragePartyKey } from "../constants";
-import { setPartyToLocalStorage } from "../utils/setPartyToLocalStorage";
-import { usePartyLocalStorage } from "../hooks/usePartyLocalStorage";
+import { getPartyFromLocalStorage } from "../../utils/getPartyFromLocalStorage";
+import { localStoragePartyKey } from "../../constants";
+import { setPartyToLocalStorage } from "../../utils/setPartyToLocalStorage";
+import { usePartyLocalStorage } from "../../hooks/usePartyLocalStorage";
 
 const parties = [
   ["Me", "James", "Kai", "Leo", "Vincent"],

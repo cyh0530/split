@@ -14,9 +14,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { localStoragePartyKey } from "../constants";
-import { getPartyFromLocalStorage } from "../utils/getPartyFromLocalStorage";
-import { setPartyToLocalStorage } from "../utils/setPartyToLocalStorage";
+import { localStoragePartyKey } from "../../constants";
+import { getPartyFromLocalStorage } from "../../utils/getPartyFromLocalStorage";
+import { setPartyToLocalStorage } from "../../utils/setPartyToLocalStorage";
 
 interface ScanAddPartyProps {
   open: boolean;

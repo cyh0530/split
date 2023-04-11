@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScanSteps } from "./ScanSteps";
 import { ScanReceipt } from "./ScanReceipt";
-import { ScanSelectParty } from "./ScanSelectParty";
+import { ScanSelectParty } from "./SelectParty";
 import { ScanSplitCheck } from "./ScanSplitCheck";
 import { ScanResult } from "./ScanResult";
 
