@@ -28,6 +28,7 @@ const parties = [
 interface ScanSelectPartyProps {
   currentParty: string[];
   setCurrentParty: React.Dispatch<React.SetStateAction<string[]>>;
+  goToNextStep: () => void;
 }
 
 const indexOfParty = (parties: string[][], party: string[]) => {
@@ -52,6 +53,7 @@ const indexOfParty = (parties: string[][], party: string[]) => {
 export function ScanSelectParty({
   currentParty,
   setCurrentParty,
+  goToNextStep,
 }: ScanSelectPartyProps) {
   const parties = usePartyLocalStorage();
   const [openAddPartyModal, setOpenAddPartyModal] = useState(false);
@@ -77,7 +79,12 @@ export function ScanSelectParty({
               </IconButton>
             }
           >
-            <ListItemButton onClick={() => setCurrentParty(party)}>
+            <ListItemButton
+              onClick={() => {
+                setCurrentParty(party);
+                goToNextStep();
+              }}
+            >
               <ListItemIcon>
                 <Radio checked={currentParty === party} />
               </ListItemIcon>
