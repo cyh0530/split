@@ -24,7 +24,7 @@ export function ScanSplitCheck({
     const nextReceipt = Object.assign({}, receipt);
     const itemId = item.id;
     const itemIndex = nextReceipt.items.findIndex((item) => item.id === itemId);
-    const buyers = nextReceipt.items[itemIndex].buyer;
+    const buyers = nextReceipt.items[itemIndex].buyers;
     const nameIndex = buyers[index].indexOf(name);
     if (nameIndex !== -1) {
       buyers[index].splice(nameIndex, 1);
