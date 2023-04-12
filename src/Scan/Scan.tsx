@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScanSteps } from "./ScanSteps";
 import { ScanReceipt } from "./ScanReceipt";
 import { ScanSelectParty } from "./SelectParty";
@@ -6,13 +6,26 @@ import { ScanSplitCheck } from "./SplitCheck";
 import { ScanResult } from "./ScanResult/ScanResult";
 import { ReceiptItem } from "../models/receiptItem";
 import { SplitCheck } from "../models/splitCheck";
+import { Receipt } from "../models/receipt";
+import { calculateSplitCheck } from "../utils/calculateSplitCheck";
 
 export function Scan() {
   const [currentStep, setCurrentStep] = useState(0);
   const [file, setFile] = useState<File | null>(null);
+  const [receipt, setReceipt] = useState<Receipt>({
+    items: [],
+    tip: 0,
+    tax: 0,
+    totalPrice: 0,
+  });
   const [checkItems, setCheckItems] = useState<ReceiptItem[]>([]);
-  const [currentParty, setCurrentParty] = useState<string[]>([]);
+  const [party, setCurrentParty] = useState<string[]>([]);
   const [splitCheck, setSplitCheck] = useState<SplitCheck[]>([]);
+
+  useEffect(() => {
+    const newSplitCheck = calculateSplitCheck(party, receipt);
+    setSplitCheck(newSplitCheck)
+  }, [receipt])
 
   const goToNextStep = () => setCurrentStep(currentStep + 1);
   return (
@@ -21,13 +34,17 @@ export function Scan() {
       {currentStep === 0 && <ScanReceipt file={file} setFile={setFile} />}
       {currentStep === 1 && (
         <ScanSelectParty
-          currentParty={currentParty}
+          currentParty={party}
           setCurrentParty={setCurrentParty}
           goToNextStep={goToNextStep}
         />
       )}
       {currentStep === 2 && (
-        <ScanSplitCheck party={currentParty} items={checkItems} />
+        <ScanSplitCheck
+          party={party}
+          receipt={receipt}
+          setReceipt={setReceipt}
+        />
       )}
       {currentStep === 3 && <ScanResult splitCheck={splitCheck} />}
     </>

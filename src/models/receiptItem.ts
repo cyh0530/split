@@ -4,5 +4,6 @@ export type ReceiptItem = {
     quantity: number;
     unitPrice: number;
     totalPrice: number;
-    buyer: string[][];
+    buyers: string[][];
+    note?: string;
 }

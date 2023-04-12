@@ -81,7 +81,6 @@ function Manual() {
         amount: string
     ) => {
         const value = evaluate(amount) || 0;
-        console.log("hi");
         if (value === 0) {
             setTips(0);
             setTipsRate(0);
