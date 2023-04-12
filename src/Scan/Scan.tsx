@@ -3,15 +3,16 @@ import { ScanSteps } from "./ScanSteps";
 import { ScanReceipt } from "./ScanReceipt";
 import { ScanSelectParty } from "./SelectParty";
 import { ScanSplitCheck } from "./SplitCheck";
-import { ScanResult } from "./ScanResult";
+import { ScanResult } from "./ScanResult/ScanResult";
 import { ReceiptItem } from "../models/receiptItem";
+import { SplitCheck } from "../models/splitCheck";
 
 export function Scan() {
   const [currentStep, setCurrentStep] = useState(0);
   const [file, setFile] = useState<File | null>(null);
   const [checkItems, setCheckItems] = useState<ReceiptItem[]>([]);
   const [currentParty, setCurrentParty] = useState<string[]>([]);
-  const [splitCheck, setSplitCheck] = useState();
+  const [splitCheck, setSplitCheck] = useState<SplitCheck[]>([]);
 
   const goToNextStep = () => setCurrentStep(currentStep + 1);
   return (
@@ -28,7 +29,7 @@ export function Scan() {
       {currentStep === 2 && (
         <ScanSplitCheck party={currentParty} items={checkItems} />
       )}
-      {currentStep === 3 && <ScanResult />}
+      {currentStep === 3 && <ScanResult splitCheck={splitCheck} />}
     </>
   );
 }
