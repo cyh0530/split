@@ -8,5 +8,6 @@ export type SplitCheck = {
     }[];
     tax: number;
     tip: number;
+    subTotalPrice: number;
     totalPrice: number;
 }
