@@ -8,11 +8,12 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
+  ListItemText,
   Modal,
   Snackbar,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { localStoragePartyKey } from "../../constants";
 import { getPartyFromLocalStorage } from "../../utils/getPartyFromLocalStorage";
@@ -37,14 +38,18 @@ export function ScanAddParty({
   newParty,
   setNewParty,
 }: ScanAddPartyProps) {
+  const [allNames, setAllNames] = useState<string[]>([]);
   const [newName, setNewName] = useState("");
   const [addError, setAddError] = useState(false);
   const [addHelperText, setAddHelperText] = useState("");
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
 
-  var names = parties.flat();
-  names = names.filter((item, index) => names.indexOf(item) === index);
-  names.sort();
+  useEffect(() => {
+    var names = parties.flat();
+    names = names.filter((item, index) => names.indexOf(item) === index);
+    names.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
+    setAllNames(names);
+  }, []);
 
   const handleSetNewParty = (name: string) => {
     const nameIndex = newParty.indexOf(name);
@@ -54,7 +59,7 @@ export function ScanAddParty({
     } else {
       nextNewParty.splice(nameIndex, 1);
     }
-    nextNewParty.sort();
+    nextNewParty.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
     setNewParty(nextNewParty);
   };
 
@@ -64,12 +69,16 @@ export function ScanAddParty({
   };
 
   const handleAddName = () => {
-    if (names.includes(newName)) {
+    const nextAllNames = [...allNames];
+    if (nextAllNames.includes(newName)) {
       setAddError(true);
       setAddHelperText("Name already exists");
       return;
     }
-    names.push(newName);
+    nextAllNames.push(newName);
+    nextAllNames.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
+    handleSetNewParty(newName);
+    setAllNames(nextAllNames);
     setNewName("");
     resetAddError();
   };
@@ -91,30 +100,44 @@ export function ScanAddParty({
   return (
     <>
       <Modal open={open}>
-        <>
-          <Box sx={{ display: "flex", justifyItems: "end" }}>
+        <Box
+          sx={{
+            padding: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            background: "white",
+            height: "100%",
+            overflow: "scroll",
+          }}
+        >
+          <Box sx={{ textAlign: "right" }}>
             <IconButton onClick={handleCloseModal}>
               <CloseIcon />
             </IconButton>
           </Box>
-          <List>
-            {names.map((name) => (
-              <ListItem key={name}>
-                <ListItemButton onClick={() => handleSetNewParty(name)}>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={newParty.indexOf(name) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                    />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{flex: 1, overflow: "auto"}}>
+            <List dense disablePadding>
+              {allNames.map((name) => (
+                <ListItem key={name} disableGutters>
+                  <ListItemButton onClick={() => handleSetNewParty(name)}>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={newParty.indexOf(name) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={name} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
+              size="small"
               value={newName}
               helperText={addHelperText}
               error={addError}
@@ -127,15 +150,18 @@ export function ScanAddParty({
                   handleAddName();
                 }
               }}
+              placeholder="Add Name"
             />
-            <Button variant="outlined" onClick={handleAddName}>
-              Add
-            </Button>
+            <Box>
+              <Button variant="outlined" onClick={handleAddName}>
+                Add
+              </Button>
+            </Box>
           </Box>
           <Button variant="contained" onClick={handleSave}>
             Save
           </Button>
-        </>
+        </Box>
       </Modal>
       <Snackbar
         autoHideDuration={3000}
