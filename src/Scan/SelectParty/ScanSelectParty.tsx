@@ -2,28 +2,19 @@ import {
   Box,
   Button,
   Chip,
+  Divider,
   IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Modal,
   Radio,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { ScanAddParty } from "./ScanAddParty";
-import { getPartyFromLocalStorage } from "../../utils/getPartyFromLocalStorage";
-import { localStoragePartyKey } from "../../constants";
-import { setPartyToLocalStorage } from "../../utils/setPartyToLocalStorage";
 import { usePartyLocalStorage } from "../../hooks/usePartyLocalStorage";
-
-const parties = [
-  ["Me", "James", "Kai", "Leo", "Vincent"],
-  ["Me", "James", "Kai", "Leo"],
-  ["Me", "Albert", "James", "Kai", "Leo", "Vincent"],
-];
 
 interface ScanSelectPartyProps {
   currentParty: string[];
@@ -55,57 +46,68 @@ export function ScanSelectParty({
   setCurrentParty,
   goToNextStep,
 }: ScanSelectPartyProps) {
-  const parties = usePartyLocalStorage();
+  const [localStorageParty, setLocalStorageParty] = usePartyLocalStorage();
   const [openAddPartyModal, setOpenAddPartyModal] = useState(false);
   const [newParty, setNewParty] = useState<string[]>([]);
 
   const handleDelete = (party: string[]) => {
-    var partyIndex = indexOfParty(parties, party);
+    const nextLocalStorageParty = [...localStorageParty]
+    var partyIndex = indexOfParty(nextLocalStorageParty, party);
     if (partyIndex !== -1) {
-      const partiesAfterDelete = parties.splice(partyIndex, 1);
-      setPartyToLocalStorage(partiesAfterDelete);
+      const partiesAfterDelete = nextLocalStorageParty.splice(partyIndex, 1);
+      setLocalStorageParty(partiesAfterDelete);
     }
   };
 
   return (
-    <Box>
-      <List>
-        {parties.map((party) => (
-          <ListItem
-            key={party.join("-")}
-            secondaryAction={
-              <IconButton onClick={() => handleDelete(party)}>
-                <DeleteIcon />
-              </IconButton>
-            }
-          >
-            <ListItemButton
-              onClick={() => {
-                setCurrentParty(party);
-                goToNextStep();
-              }}
-            >
-              <ListItemIcon>
-                <Radio checked={currentParty === party} />
-              </ListItemIcon>
-              <ListItemText>
-                <Box sx={{ display: "flex", gap: 1 }}>
-                  {party.map((name) => (
-                    <Chip label={name} />
-                  ))}
-                </Box>
-              </ListItemText>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Button onClick={() => setOpenAddPartyModal(true)}>Add Party</Button>
+    <>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <List dense disablePadding>
+          {localStorageParty.map((party) => (
+            <Fragment key={party.join("-")}>
+              <ListItem
+                disablePadding
+                secondaryAction={
+                  <IconButton onClick={() => handleDelete(party)}>
+                    <DeleteIcon />
+                  </IconButton>
+                }
+                sx={{
+                  paddingY: 1
+                }}
+              >
+                <ListItemButton
+                  onClick={() => {
+                    setCurrentParty(party);
+                    goToNextStep();
+                  }}
+                >
+                  <ListItemIcon>
+                    <Radio checked={currentParty === party} />
+                  </ListItemIcon>
+                  {/* <ListItemText sx={{width: "100%"}}> */}
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                      {party.map((name) => (
+                        <Chip size="small" label={name} />
+                      ))}
+                    </Box>
+                  {/* </ListItemText> */}
+                </ListItemButton>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </Fragment>
+          ))}
+        </List>
+        <Button variant="outlined" onClick={() => setOpenAddPartyModal(true)}>
+          Add Party
+        </Button>
+      </Box>
       <ScanAddParty
         open={openAddPartyModal}
         setOpen={setOpenAddPartyModal}
         newParty={newParty}
         setNewParty={setNewParty}
       />
-    </Box>
+    </>
   );
 }

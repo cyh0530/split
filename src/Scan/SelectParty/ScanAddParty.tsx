@@ -15,9 +15,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { localStoragePartyKey } from "../../constants";
-import { getPartyFromLocalStorage } from "../../utils/getPartyFromLocalStorage";
-import { setPartyToLocalStorage } from "../../utils/setPartyToLocalStorage";
+import { usePartyLocalStorage } from "../../hooks/usePartyLocalStorage";
 
 interface ScanAddPartyProps {
   open: boolean;
@@ -42,6 +40,7 @@ export function ScanAddParty({
   const [newName, setNewName] = useState("");
   const [addError, setAddError] = useState(false);
   const [addHelperText, setAddHelperText] = useState("");
+  const [localStorageParty, setLocalStorageParty] = usePartyLocalStorage();
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
 
   useEffect(() => {
@@ -84,9 +83,9 @@ export function ScanAddParty({
   };
 
   const handleSave = () => {
-    var parties = getPartyFromLocalStorage();
-    parties.unshift(newParty);
-    setPartyToLocalStorage(parties);
+    const nextLocalStorageParty = [...localStorageParty]
+    nextLocalStorageParty.unshift(newParty);
+    setLocalStorageParty(parties);
     setShowSuccessSnackbar(true);
     handleCloseModal();
   };
@@ -101,7 +100,7 @@ export function ScanAddParty({
     <>
       <Modal open={open}>
         <Box
-          sx={{
+          sx={({breakpoints}) => ({
             padding: 2,
             display: "flex",
             flexDirection: "column",
@@ -109,7 +108,15 @@ export function ScanAddParty({
             background: "white",
             height: "100%",
             overflow: "scroll",
-          }}
+            margin: "auto",
+            [breakpoints.down('sm')]: {
+              width: "100%"
+            },
+            [breakpoints.up('sm')]: {
+              width: breakpoints.values.sm
+            }
+            
+          })}
         >
           <Box sx={{ textAlign: "right" }}>
             <IconButton onClick={handleCloseModal}>
@@ -135,7 +142,7 @@ export function ScanAddParty({
               ))}
             </List>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
             <TextField
               size="small"
               value={newName}
