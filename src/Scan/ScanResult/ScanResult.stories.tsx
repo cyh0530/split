@@ -1,0 +1,31 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { ScanResult } from "./ScanResult";
+import { splitCheckResults } from "../../stories/fakes/splitResult";
+import { Box } from "@mui/material";
+
+export default {
+  title: "Scan Result",
+  component: ScanResult,
+  decorators: [
+    (Story) => {
+      return (
+        <Box
+          sx={({ breakpoints }) => ({
+            margin: "auto",
+            maxWidth: breakpoints.values.sm,
+          })}
+        >
+          <Story />
+        </Box>
+      );
+    },
+  ],
+} as Meta<typeof ScanResult>;
+
+type Story = StoryObj<typeof ScanResult>;
+
+export const Primary: Story = {
+  args: {
+    splitCheck: splitCheckResults,
+  },
+};

@@ -1,20 +1,23 @@
 import {
   ListItem,
   ListItemText,
-  Box,
   Typography,
   Collapse,
   List,
   ListItemButton,
+  ListItemIcon,
 } from "@mui/material";
 import { useState } from "react";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import { SplitCheck } from "../../models/splitCheck";
 
+
 interface ScanResultItemProps {
-  user: SplitCheck;
+  buyer: SplitCheck;
 }
 
-export function ScanResultItem({ user }: ScanResultItemProps) {
+export function ScanResultItem({ buyer }: ScanResultItemProps) {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -22,25 +25,30 @@ export function ScanResultItem({ user }: ScanResultItemProps) {
   };
   return (
     <>
-      <ListItemButton key={user.name} onClick={handleClick}>
+      <ListItemButton divider onClick={handleClick}>
+        <ListItemIcon>{open ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
         <ListItemText
-          primary={
-            <Box sx={{ display: "flex", justifyItems: "center" }}>
-              <Typography>{user.name}</Typography>
-              <Typography>${user.totalPrice}</Typography>
-            </Box>
-          }
-          secondary={`Tax: ${user.tax}, Tip: ${user.tip}`}
+          primary={buyer.name}
+          secondary={`Tax: ${buyer.tax}, Tip: ${buyer.tip}`}
         />
+        <Typography>${buyer.totalPrice}</Typography>
       </ListItemButton>
       <Collapse in={open}>
-        <List component="div">
-          {user.items.map((item) => (
+        <List component="div" dense sx={{ pl: 4 }}>
+          {buyer.items.map((item) => (
             <ListItem>
+              <ListItemIcon>
+                {/* <Fastfood /> */}
+                <Typography>{item.quantity}</Typography>
+              </ListItemIcon>
               <ListItemText
-                primary={`${item.name} * ${item.quantity} = ${item.price}`}
+                primary={item.name}
+                primaryTypographyProps={{ variant: "body2" }}
                 secondary={item.note}
+                secondaryTypographyProps={{ variant: "body2" }}
+                sx={{ pr: 1 }}
               />
+              <Typography variant="body2">${item.totalPrice}</Typography>
             </ListItem>
           ))}
         </List>
