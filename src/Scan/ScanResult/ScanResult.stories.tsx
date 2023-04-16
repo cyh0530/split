@@ -4,7 +4,7 @@ import { splitCheckResults } from "../../stories/fakes/splitResult";
 import { Box } from "@mui/material";
 
 export default {
-  title: "Scan Result",
+  title: "Scan Receipt/4 - Result",
   component: ScanResult,
   decorators: [
     (Story) => {

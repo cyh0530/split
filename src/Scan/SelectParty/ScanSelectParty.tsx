@@ -8,7 +8,6 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText,
   Radio,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -51,7 +50,7 @@ export function ScanSelectParty({
   const [newParty, setNewParty] = useState<string[]>([]);
 
   const handleDelete = (party: string[]) => {
-    const nextLocalStorageParty = [...localStorageParty]
+    const nextLocalStorageParty = [...localStorageParty];
     var partyIndex = indexOfParty(nextLocalStorageParty, party);
     if (partyIndex !== -1) {
       const partiesAfterDelete = nextLocalStorageParty.splice(partyIndex, 1);
@@ -73,7 +72,7 @@ export function ScanSelectParty({
                   </IconButton>
                 }
                 sx={{
-                  paddingY: 1
+                  paddingY: 1,
                 }}
               >
                 <ListItemButton
@@ -86,11 +85,11 @@ export function ScanSelectParty({
                     <Radio checked={currentParty === party} />
                   </ListItemIcon>
                   {/* <ListItemText sx={{width: "100%"}}> */}
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                      {party.map((name) => (
-                        <Chip size="small" label={name} />
-                      ))}
-                    </Box>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {party.map((name) => (
+                      <Chip size="small" key={name} label={name} />
+                    ))}
+                  </Box>
                   {/* </ListItemText> */}
                 </ListItemButton>
               </ListItem>

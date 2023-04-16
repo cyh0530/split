@@ -5,7 +5,7 @@ import { localStoragePartyKey } from "../../constants";
 import { storybookParties } from "../../stories/fakes/parties";
 
 export default {
-  title: "ScanAddParty",
+  title: "Scan Receipt/2 - Add Party",
   component: ScanAddParty,
   decorators: [
     (Story, context) => {

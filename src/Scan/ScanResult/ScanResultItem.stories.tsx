@@ -3,7 +3,7 @@ import { ScanResultItem } from "./ScanResultItem";
 import { splitCheckResults } from "../../stories/fakes/splitResult";
 
 export default {
-    title: "Scan Result Item",
+    title: "Scan Receipt/4 - Result Item",
     component: ScanResultItem,
 } as Meta<typeof ScanResultItem>;
 
