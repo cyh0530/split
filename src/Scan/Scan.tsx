@@ -4,7 +4,6 @@ import { ScanReceipt } from "./ScanReceipt";
 import { ScanSelectParty } from "./SelectParty";
 import { ScanSplitCheck } from "./SplitCheck";
 import { ScanResult } from "./ScanResult/ScanResult";
-import { ReceiptItem } from "../models/receiptItem";
 import { SplitCheck } from "../models/splitCheck";
 import { Receipt } from "../models/receipt";
 import { calculateSplitCheck } from "../utils/calculateSplitCheck";
@@ -18,7 +17,6 @@ export function Scan() {
     tax: 0,
     totalPrice: 0,
   });
-  const [checkItems, setCheckItems] = useState<ReceiptItem[]>([]);
   const [party, setCurrentParty] = useState<string[]>([]);
   const [splitCheck, setSplitCheck] = useState<SplitCheck[]>([]);
 

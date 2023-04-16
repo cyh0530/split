@@ -50,52 +50,34 @@ export function CheckSummaryItem({
   };
 
   return (
-    <ListItem
-      secondaryAction={
-        !isEdit && (
-          <IconButton onClick={() => setIsEdit(true)}>
-            <EditIcon />
+    <ListItem>
+      <ListItemText primary={summaryType} />
+      {isEdit ? (
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <TextField
+            error={valueError}
+            ref={valueRef}
+            type="number"
+            label={"Unit Price"}
+            defaultValue={value}
+            size="small"
+            helperText={valueError && "Please enter a valid number"}
+            onChange={handleItemChange}
+          />
+          <IconButton
+            color="success"
+            onClick={handleEditItem}
+            disabled={editSubmitEnabled}
+          >
+            <CheckIcon />
           </IconButton>
-        )
-      }
-    >
-      <ListItemText
-        primary={
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>{summaryType}</Typography>
-            <Box>
-              {isEdit ? (
-                <>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <TextField
-                      error={valueError}
-                      ref={valueRef}
-                      type="number"
-                      label={"Unit Price"}
-                      defaultValue={value}
-                      size="small"
-                      helperText={valueError && "Please enter a valid number"}
-                      onChange={handleItemChange}
-                    />
-                  </Box>
-                  <IconButton
-                    color="success"
-                    onClick={handleEditItem}
-                    disabled={editSubmitEnabled}
-                  >
-                    <CheckIcon />
-                  </IconButton>
-                  <IconButton color="error" onClick={() => setIsEdit(false)}>
-                    <CloseIcon />
-                  </IconButton>
-                </>
-              ) : (
-                <Typography>{value}</Typography>
-              )}
-            </Box>
-          </Box>
-        }
-      />
+          <IconButton color="error" onClick={() => setIsEdit(false)}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      ) : (
+        <Typography>${value}</Typography>
+      )}
     </ListItem>
   );
 }

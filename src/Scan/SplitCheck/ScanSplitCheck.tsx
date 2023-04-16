@@ -1,9 +1,10 @@
-import { List } from "@mui/material";
+import { IconButton, List, ListItem } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Receipt } from "../../models/receipt";
 import { ReceiptItem } from "../../models/receiptItem";
 import { CheckItem } from "./CheckItem";
 import { CheckSummaryItem } from "./CheckSummaryItem";
+import { useState } from "react";
 
 interface ScanSplitCheckProps {
   party: string[];
@@ -16,6 +17,8 @@ export function ScanSplitCheck({
   receipt,
   setReceipt,
 }: ScanSplitCheckProps) {
+  const [isEdit, setIsEdit] = useState(false);
+
   const handleAddBuyerNameToItem = (
     item: ReceiptItem,
     name: string,
@@ -59,9 +62,18 @@ export function ScanSplitCheck({
     }
     setReceipt(nextReceipt);
   };
+  // TODO: check if sub total + tax + tip = total
 
   return (
     <List>
+      <ListItem
+        divider
+        secondaryAction={
+          <IconButton onClick={() => setIsEdit(true)}>
+            <EditIcon />
+          </IconButton>
+        }
+      />
       {receipt.items.map((item) => (
         <CheckItem
           key={item.id}

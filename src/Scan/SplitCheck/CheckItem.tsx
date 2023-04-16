@@ -1,21 +1,24 @@
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import {
   Box,
   Chip,
   Collapse,
+  Divider,
   IconButton,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   TextField,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from "@mui/icons-material/Done";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import FastfoodIcon from "@mui/icons-material/Fastfood";
 import { ReceiptItem } from "../../models/receiptItem";
 
-interface CheckItem {
+interface CheckItemProps {
   item: ReceiptItem;
   party: string[];
   updateItem: (id: string, newUnitPrice: number, newQuantity: number) => void;
@@ -31,7 +34,7 @@ export function CheckItem({
   party,
   updateItem,
   handleAddBuyerNameToItem,
-}: CheckItem) {
+}: CheckItemProps) {
   const [isEdit, setIsEdit] = useState(false);
   const [editSubmitEnabled, setEditSubmitEnabled] = useState(false);
   const [unitPriceError, setUnitPriceError] = useState(false);
@@ -80,107 +83,108 @@ export function CheckItem({
   };
 
   return (
-    <ListItem
-      secondaryAction={
-        !isEdit && (
-          <IconButton onClick={() => setIsEdit(true)}>
-            <EditIcon />
-          </IconButton>
-        )
-      }
-    >
-      <ListItemText
-        primary={
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>{item.name}</Typography>
-            <Box>
-              {isEdit ? (
-                <>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <TextField
-                      error={unitPriceError}
-                      ref={unitPriceRef}
-                      type="number"
-                      label={"Unit Price"}
-                      defaultValue={item.unitPrice}
-                      size="small"
-                      helperText={
-                        unitPriceError && "Please enter a valid number"
-                      }
-                      onChange={handleItemChange}
-                    />
-                    <Typography>*</Typography>
-                    <TextField
-                      error={quantityError}
-                      ref={quantityRef}
-                      type="number"
-                      label={"Quantity"}
-                      defaultValue={item.quantity}
-                      size="small"
-                      helperText={
-                        quantityError && "Please enter a valid number"
-                      }
-                      onChange={handleItemChange}
-                    />
-                    <Typography>= {totalPrice}</Typography>
-                  </Box>
-                  <IconButton
-                    color="success"
-                    onClick={handleEditItem}
-                    disabled={editSubmitEnabled}
-                  >
-                    <CheckIcon />
-                  </IconButton>
-                  <IconButton color="error" onClick={() => setIsEdit(false)}>
-                    <CloseIcon />
-                  </IconButton>
-                </>
-              ) : (
-                <Typography>
-                  {item.unitPrice} * {item.quantity} = {item.totalPrice}
-                </Typography>
-              )}
-            </Box>
-          </Box>
-        }
-        secondary={
-          item.quantity === 1 && (
-            <Box>
-              {party.map((name) => (
-                <Chip
-                  label={name}
-                  onClick={() => handleAddBuyerNameToItem(item, name, 0)}
-                />
-              ))}
-            </Box>
-          )
-        }
-      />
-      {item.quantity > 1 && (
-        <Collapse>
-          <List>
-            {new Array<number>(item.quantity).map((i) => (
-              <ListItem key={i}>
-                <ListItemText
-                  primary={<Typography>{item.name}</Typography>}
-                  secondary={
-                    <Box>
-                      {party.map((name) => (
-                        <Chip
-                          label={name}
-                          onClick={() =>
-                            handleAddBuyerNameToItem(item, name, i)
-                          }
-                        />
-                      ))}
+    <>
+      <ListItem>
+        <ListItemText
+          disableTypography
+          primary={
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>
+                {item.name} (${item.unitPrice} * {item.quantity})
+              </Typography>
+              <Box>
+                {isEdit ? (
+                  <>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <TextField
+                        error={unitPriceError}
+                        ref={unitPriceRef}
+                        type="number"
+                        label={"Unit Price"}
+                        defaultValue={item.unitPrice}
+                        size="small"
+                        helperText={
+                          unitPriceError && "Please enter a valid number"
+                        }
+                        onChange={handleItemChange}
+                      />
+                      <Typography>*</Typography>
+                      <TextField
+                        error={quantityError}
+                        ref={quantityRef}
+                        type="number"
+                        label={"Quantity"}
+                        defaultValue={item.quantity}
+                        size="small"
+                        helperText={
+                          quantityError && "Please enter a valid number"
+                        }
+                        onChange={handleItemChange}
+                      />
+                      <Typography>= {totalPrice}</Typography>
                     </Box>
-                  }
-                />
+                    <IconButton
+                      color="success"
+                      onClick={handleEditItem}
+                      disabled={editSubmitEnabled}
+                    >
+                      <CheckIcon />
+                    </IconButton>
+                    <IconButton color="error" onClick={() => setIsEdit(false)}>
+                      <CloseIcon />
+                    </IconButton>
+                  </>
+                ) : (
+                  <Typography sx={{ fontWeight: 700 }}>
+                    ${item.totalPrice}
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          }
+        />
+      </ListItem>
+      <Collapse in={true}>
+        <List>
+          {Array.from(Array(item.quantity).keys()).map((index) => (
+            <Fragment key={`${item.name}-${index}`}>
+              <ListItem>
+                <ListItemIcon>
+                  <FastfoodIcon />
+                </ListItemIcon>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {party.map((name) => {
+                    const containCurrentBuyer =
+                      item.buyers[index].includes(name);
+                    return (
+                      <Chip
+                        key={name}
+                        label={name}
+                        variant={containCurrentBuyer ? "filled" : "outlined"}
+                        deleteIcon={
+                          containCurrentBuyer ? <DoneIcon /> : undefined
+                        }
+                        onDelete={
+                          containCurrentBuyer
+                            ? () => handleAddBuyerNameToItem(item, name, index)
+                            : undefined
+                        }
+                        onClick={() =>
+                          handleAddBuyerNameToItem(item, name, index)
+                        }
+                      />
+                    );
+                  })}
+                </Box>
               </ListItem>
-            ))}
-          </List>
-        </Collapse>
-      )}
-    </ListItem>
+              {index !== item.quantity - 1 && (
+                <Divider variant="middle" component="li" />
+              )}
+            </Fragment>
+          ))}
+        </List>
+      </Collapse>
+      <Divider />
+    </>
   );
 }
