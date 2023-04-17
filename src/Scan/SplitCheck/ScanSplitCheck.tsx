@@ -1,12 +1,21 @@
-import { Box, IconButton, List, ListItem, Typography } from "@mui/material";
+import { useState } from "react";
+import {
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { Receipt } from "../../models/receipt";
-import { ReceiptItem } from "../../models/receiptItem";
+import _ from "lodash";
+import { Receipt, ReceiptItem } from "../../models";
 import { CheckItem } from "./CheckItem";
 import { CheckSummaryItem } from "./CheckSummaryItem";
-import { useState } from "react";
+import { calculateReceiptTotal, calculateReceiptSubTotal } from "../../utils";
 
 interface ScanSplitCheckProps {
   party: string[];
@@ -42,37 +51,56 @@ export function ScanSplitCheck({
 
   const updateItem = (
     itemId: string,
+    newItemName: string,
     newUnitPrice: number,
     newQuantity: number
   ) => {
-    const nextReceipt = Object.assign({}, receipt);
-    const itemIndex = nextReceipt.items.findIndex((item) => item.id === itemId);
-    nextReceipt.items[itemIndex].unitPrice = newUnitPrice;
-    nextReceipt.items[itemIndex].quantity = newQuantity;
+    const nextReceipt = _.cloneDeep(editingReceipt);
+    const items = nextReceipt.items;
+    const itemIndex = items.findIndex((item) => item.id === itemId);
+    const currentItem = items[itemIndex];
+    currentItem.name = newItemName;
+    currentItem.unitPrice = newUnitPrice;
+    currentItem.quantity = newQuantity;
+    if (newQuantity < currentItem.buyers.length) {
+      currentItem.buyers = currentItem.buyers.slice(0, newQuantity);
+    } else if (newQuantity > currentItem.buyers.length) {
+      for (let i = currentItem.buyers.length; i < newQuantity; i++) {
+        currentItem.buyers.push([]);
+      }
+    }
+
     var totalPrice = parseFloat((newQuantity * newUnitPrice).toFixed(2));
     nextReceipt.items[itemIndex].totalPrice = totalPrice;
-    setEditingReceipt(nextReceipt);
+    updateReceipt(nextReceipt);
   };
 
   const updateSummaryItem = (summaryType: string, value: number) => {
-    const nextReceipt = Object.assign({}, receipt);
+    const nextReceipt = _.cloneDeep(editingReceipt);
     if (summaryType === "Tax") {
       nextReceipt.tax = value;
     } else if (summaryType === "Tip") {
       nextReceipt.tip = value;
-    } else if (summaryType === "Total") {
-      nextReceipt.totalPrice = value;
     }
+    updateReceipt(nextReceipt);
+  };
+
+  const updateReceipt = (nextReceipt: Receipt) => {
+    const calculateSubTotal = calculateReceiptSubTotal(nextReceipt);
+    const calculatedTotal = calculateReceiptTotal(nextReceipt);
+    nextReceipt.subTotal = calculateSubTotal;
+    nextReceipt.totalPrice = calculatedTotal;
     setEditingReceipt(nextReceipt);
   };
 
   const onFinishEditing = () => {
-    setReceipt(editingReceipt)
+    setReceipt(editingReceipt);
     setIsEdit(false);
   };
 
   const onCancelEditing = () => {
-    setReceipt(receipt);
+    console.log(receipt);
+    setEditingReceipt(receipt);
     setIsEdit(false);
   };
 
@@ -98,7 +126,7 @@ export function ScanSplitCheck({
         }
         sx={{ pb: 5 }}
       />
-      {receipt.items.map((item) => (
+      {editingReceipt.items.map((item) => (
         <CheckItem
           key={item.id}
           item={item}
@@ -108,21 +136,45 @@ export function ScanSplitCheck({
           handleAddBuyerNameToItem={handleAddBuyerNameToItem}
         />
       ))}
+      {isEdit && (
+        <ListItemButton>
+          <Typography color="text.secondary">+ Add Item</Typography>
+        </ListItemButton>
+      )}
+      <ListItem dense>
+        <ListItemText disableTypography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="body2">Subtotal</Typography>
+            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+              ${editingReceipt.subTotal}
+            </Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
       <CheckSummaryItem
+        isEdit={isEdit}
         summaryType={"Tax"}
-        value={receipt.tax}
+        subTotal={editingReceipt.subTotal}
+        value={editingReceipt.tax}
         updateItem={updateSummaryItem}
       />
       <CheckSummaryItem
+        isEdit={isEdit}
         summaryType={"Tip"}
-        value={receipt.tip}
+        subTotal={editingReceipt.subTotal}
+        value={editingReceipt.tip}
         updateItem={updateSummaryItem}
       />
-      <CheckSummaryItem
-        summaryType={"Total"}
-        value={receipt.totalPrice}
-        updateItem={updateSummaryItem}
-      />
+      <ListItem dense>
+        <ListItemText disableTypography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography>Total</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              ${editingReceipt.totalPrice}
+            </Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
     </List>
   );
 }

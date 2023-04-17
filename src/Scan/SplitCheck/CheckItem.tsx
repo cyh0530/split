@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
+import DeleteIcon from "@mui/icons-material/Delete";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import { ReceiptItem } from "../../models/receiptItem";
 
@@ -20,7 +21,12 @@ interface CheckItemProps {
   item: ReceiptItem;
   party: string[];
   isEdit: boolean;
-  updateItem: (id: string, newUnitPrice: number, newQuantity: number) => void;
+  updateItem: (
+    id: string,
+    newItemName: string,
+    newUnitPrice: number,
+    newQuantity: number
+  ) => void;
   handleAddBuyerNameToItem: (
     item: ReceiptItem,
     name: string,
@@ -35,16 +41,27 @@ export function CheckItem({
   updateItem,
   handleAddBuyerNameToItem,
 }: CheckItemProps) {
+  const [itemNameError, setItemNameError] = useState(false);
   const [unitPriceError, setUnitPriceError] = useState(false);
   const [quantityError, setQuantityError] = useState(false);
   const [totalPrice, setTotalPrice] = useState(item.totalPrice);
+  const itemNameRef = useRef<HTMLInputElement>(null);
   const unitPriceRef = useRef<HTMLInputElement>(null);
   const quantityRef = useRef<HTMLInputElement>(null);
 
   const handleItemChange = () => {
+    const newItemName = itemNameRef.current?.value;
     const newUnitPriceStr = unitPriceRef.current?.value;
     const newQuantityStr = quantityRef.current?.value;
     let valueError = false;
+
+    if (!newItemName) {
+      setItemNameError(true);
+      valueError = true;
+    } else {
+      setItemNameError(false);
+    }
+
     if (!newUnitPriceStr || parseFloat(newUnitPriceStr) <= 0) {
       setUnitPriceError(true);
       valueError = true;
@@ -63,12 +80,12 @@ export function CheckItem({
       return;
     }
 
-    if (!!newUnitPriceStr && !!newQuantityStr) {
+    if (!!newItemName && !!newUnitPriceStr && !!newQuantityStr) {
       const newUnitPrice = parseFloat(newUnitPriceStr);
       const newQuantity = parseFloat(newQuantityStr);
       var totalPrice = parseFloat((newUnitPrice * newQuantity).toFixed(2));
       setTotalPrice(totalPrice);
-      updateItem(item.id, newUnitPrice, newQuantity);
+      updateItem(item.id, newItemName, newUnitPrice, newQuantity);
     }
   };
 
@@ -77,43 +94,96 @@ export function CheckItem({
       <ListItem>
         <ListItemText disableTypography>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>
-              {item.name}
-              {!isEdit && ` ($${item.unitPrice} * ${item.quantity})`}
-            </Typography>
-            <Typography sx={{ fontWeight: 700 }}>${totalPrice}</Typography>
+            {isEdit ? (
+              <>
+                <TextField
+                  error={itemNameError}
+                  inputRef={itemNameRef}
+                  label={"Item Name"}
+                  defaultValue={item.name}
+                  size="small"
+                  variant="standard"
+                  helperText={itemNameError && "Please enter an item name"}
+                  onChange={handleItemChange}
+                  multiline
+                />
+                <Box>
+                  <IconButton>
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Typography>
+                  {`${item.name} ($${item.unitPrice} * ${item.quantity})`}
+                </Typography>
+                <Typography sx={{ fontWeight: "bold" }}>
+                  ${totalPrice}
+                </Typography>
+              </>
+            )}
           </Box>
         </ListItemText>
       </ListItem>
       {isEdit ? (
-        <List sx={{}}>
+        <List>
           <ListItem>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                error={unitPriceError}
-                inputRef={unitPriceRef}
-                type="number"
-                label={"Unit Price"}
-                defaultValue={item.unitPrice}
-                size="small"
-                variant="standard"
-                helperText={unitPriceError && "Please enter a valid number"}
-                onChange={handleItemChange}
-                sx={{ width: 85 }}
-              />
-              <TextField
-                error={quantityError}
-                inputRef={quantityRef}
-                type="number"
-                label={"Quantity"}
-                defaultValue={item.quantity}
-                size="small"
-                variant="standard"
-                helperText={quantityError && "Please enter a valid number"}
-                onChange={handleItemChange}
-                sx={{ width: 85 }}
-              />
-            </Box>
+            <ListItemText disableTypography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                }}
+              >
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <Box
+                    sx={{ display: "flex", alignItems: "baseline", gap: 0.5 }}
+                  >
+                    <Typography>$</Typography>
+                    <TextField
+                      error={unitPriceError}
+                      inputRef={unitPriceRef}
+                      type="number"
+                      label={"Unit Price"}
+                      defaultValue={item.unitPrice}
+                      size="small"
+                      variant="standard"
+                      helperText={
+                        unitPriceError && "Please enter a valid number"
+                      }
+                      onChange={handleItemChange}
+                      sx={{ width: 85 }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{ display: "flex", alignItems: "baseline", gap: 0.5 }}
+                  >
+                    <Typography>*</Typography>
+                    <TextField
+                      error={quantityError}
+                      inputRef={quantityRef}
+                      type="number"
+                      label={"Quantity"}
+                      defaultValue={item.quantity}
+                      size="small"
+                      variant="standard"
+                      helperText={
+                        quantityError && "Please enter a valid number"
+                      }
+                      onChange={handleItemChange}
+                      sx={{ width: 85 }}
+                    />
+                  </Box>
+                </Box>
+                <Box>
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    = ${totalPrice}
+                  </Typography>
+                </Box>
+              </Box>
+            </ListItemText>
           </ListItem>
         </List>
       ) : (
@@ -125,7 +195,7 @@ export function CheckItem({
         // </Box>
         <List>
           {Array.from(Array(item.quantity).keys()).map((index) => (
-            <Fragment key={`${item.name}-${index}`}>
+            <Fragment key={`${item.id}-${index}`}>
               <ListItem>
                 <ListItemIcon>
                   <FastfoodIcon />

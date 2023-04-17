@@ -37,7 +37,7 @@ export function calculateSplitCheck(
   const receiptTax = receipt.tax;
   const tipRate = receiptTip / receiptSubTotal;
   const taxRate = receiptTax / receiptSubTotal;
-  Object.entries(nameToItemsMap).map(([name, items]) => {
+  Object.entries(nameToItemsMap).forEach(([name, items]) => {
     const buyerSubTotal = calculateSubTotal(items);
     const buyerTip = round(buyerSubTotal * tipRate);
     const buyerTax = round(buyerSubTotal * taxRate);

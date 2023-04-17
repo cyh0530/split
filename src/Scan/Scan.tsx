@@ -13,6 +13,7 @@ export function Scan() {
   const [file, setFile] = useState<File | null>(null);
   const [receipt, setReceipt] = useState<Receipt>({
     items: [],
+    subTotal: 0,
     tip: 0,
     tax: 0,
     totalPrice: 0,

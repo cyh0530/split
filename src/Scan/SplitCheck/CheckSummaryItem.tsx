@@ -1,83 +1,72 @@
 import {
   Box,
-  IconButton,
   ListItem,
   ListItemText,
   TextField,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 import { useRef, useState } from "react";
+import { round } from "../../utils";
 
 interface CheckSummaryItemProps {
+  isEdit: boolean;
   summaryType: string;
+  subTotal: number;
   value: number;
   updateItem: (summaryType: string, value: number) => void;
 }
 
 export function CheckSummaryItem({
+  isEdit,
   summaryType,
+  subTotal,
   value,
   updateItem,
 }: CheckSummaryItemProps) {
-  const [isEdit, setIsEdit] = useState(false);
-  const [editSubmitEnabled, setEditSubmitEnabled] = useState(false);
   const [valueError, setValueError] = useState(false);
   const valueRef = useRef<HTMLInputElement>(null);
 
-  const handleEditItem = () => {
-    const newValue = valueRef.current?.value;
-    if (!newValue || parseFloat(newValue) <= 0) {
-      return;
-    }
-
-    updateItem(summaryType, parseFloat(newValue));
-    setIsEdit(false);
-  };
-
   const handleItemChange = () => {
     const newValue = valueRef.current?.value;
-
     if (!newValue || parseFloat(newValue) <= 0) {
-      setEditSubmitEnabled(true);
       setValueError(true);
       return;
     }
-
-    setEditSubmitEnabled(false);
+    updateItem(summaryType, parseFloat(newValue));
   };
 
+  const summaryPercentage = round((value / subTotal) * 100)
+
   return (
-    <ListItem>
-      <ListItemText primary={summaryType} />
-      {isEdit ? (
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <TextField
-            error={valueError}
-            ref={valueRef}
-            type="number"
-            label={"Unit Price"}
-            defaultValue={value}
-            size="small"
-            helperText={valueError && "Please enter a valid number"}
-            onChange={handleItemChange}
-          />
-          <IconButton
-            color="success"
-            onClick={handleEditItem}
-            disabled={editSubmitEnabled}
-          >
-            <CheckIcon />
-          </IconButton>
-          <IconButton color="error" onClick={() => setIsEdit(false)}>
-            <CloseIcon />
-          </IconButton>
+    <ListItem dense>
+      <ListItemText>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography variant="body2">
+            {summaryType} ({summaryPercentage}%)
+          </Typography>
+          {isEdit ? (
+            <Box display="flex" alignItems="baseline" gap={0.5}>
+              <Typography>$</Typography>
+              <TextField
+                error={valueError}
+                inputRef={valueRef}
+                type="number"
+                label={summaryType}
+                defaultValue={value}
+                size="small"
+                helperText={valueError && "Please enter a valid number"}
+                onChange={handleItemChange}
+                variant="standard"
+                sx={{ width: 50 }}
+              />
+            </Box>
+          ) : (
+            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+              ${value}
+            </Typography>
+          )}
         </Box>
-      ) : (
-        <Typography>${value}</Typography>
-      )}
+      </ListItemText>
     </ListItem>
   );
 }
