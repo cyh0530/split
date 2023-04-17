@@ -33,6 +33,7 @@ export function ScanSplitCheck({
   setReceipt,
 }: ScanSplitCheckProps) {
   const [isEdit, setIsEdit] = useState(false);
+  const [disableFinishEditBtn, setDisableFinishEditBtn] = useState(false);
   const [editingReceipt, setEditingReceipt] = useState<Receipt>(receipt);
 
   const handleAddBuyerNameToItem = (
@@ -116,6 +117,25 @@ export function ScanSplitCheck({
     nextReceipt.subTotal = calculateSubTotal;
     nextReceipt.totalPrice = calculatedTotal;
     setEditingReceipt(nextReceipt);
+    checkReceiptValidity(nextReceipt);
+  };
+
+  const checkReceiptValidity = (receipt: Receipt) => {
+    console.log(receipt)
+    let disableFinishBtn = false;
+    receipt.items.forEach((item) => {
+      if (
+        item.name.trim().length === 0 ||
+        item.unitPrice <= 0 ||
+        item.quantity <= 0
+      ) {
+        disableFinishBtn = true;
+      }
+    });
+    if (receipt.tax <= 0 || receipt.tip <= 0) {
+      disableFinishBtn = true;
+    }
+    setDisableFinishEditBtn(disableFinishBtn);
   };
 
   const onFinishEditing = () => {
@@ -140,7 +160,11 @@ export function ScanSplitCheck({
             </IconButton>
           ) : (
             <Box display="flex" gap="1">
-              <IconButton color="success" onClick={onFinishEditing}>
+              <IconButton
+                disabled={disableFinishEditBtn}
+                color="success"
+                onClick={onFinishEditing}
+              >
                 <CheckIcon />
               </IconButton>
               <IconButton color="error" onClick={onCancelEditing}>

@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   Box,
   Chip,
@@ -35,6 +35,14 @@ interface CheckItemProps {
   handleDelete: (itemId: string) => void;
 }
 
+function isValidItemName(itemName: string) {
+  return itemName.trim().length !== 0;
+}
+
+function isValidItemNumber(itemNumber: number) {
+  return itemNumber > 0;
+}
+
 export function CheckItem({
   item,
   party,
@@ -51,35 +59,37 @@ export function CheckItem({
   const unitPriceRef = useRef<HTMLInputElement>(null);
   const quantityRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    setItemNameError(!isValidItemName(item.name));
+    setUnitPriceError(!isValidItemNumber(item.unitPrice));
+    setQuantityError(!isValidItemNumber(item.quantity));
+  }, [item]);
+
   const handleItemChange = () => {
     const newItemName = itemNameRef.current?.value;
     const newUnitPriceStr = unitPriceRef.current?.value;
     const newQuantityStr = quantityRef.current?.value;
     let valueError = false;
 
-    if (!newItemName) {
+    if (!newItemName || !isValidItemName(newItemName)) {
       setItemNameError(true);
       valueError = true;
     } else {
       setItemNameError(false);
     }
 
-    if (!newUnitPriceStr || parseFloat(newUnitPriceStr) <= 0) {
+    if (!newUnitPriceStr || !isValidItemNumber(parseFloat(newUnitPriceStr))) {
       setUnitPriceError(true);
       valueError = true;
     } else {
       setUnitPriceError(false);
     }
 
-    if (!newQuantityStr || parseFloat(newQuantityStr) <= 0) {
+    if (!newQuantityStr || !isValidItemNumber(parseFloat(newQuantityStr))) {
       setQuantityError(true);
       valueError = true;
     } else {
       setQuantityError(false);
-    }
-
-    if (valueError) {
-      return;
     }
 
     if (!!newItemName && !!newUnitPriceStr && !!newQuantityStr) {

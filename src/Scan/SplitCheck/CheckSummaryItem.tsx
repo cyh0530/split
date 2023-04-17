@@ -32,6 +32,7 @@ export function CheckSummaryItem({
       setValueError(true);
       return;
     }
+    setValueError(false);
     updateItem(summaryType, parseFloat(newValue));
   };
 
