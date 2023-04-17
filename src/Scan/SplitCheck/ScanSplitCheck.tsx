@@ -66,6 +66,14 @@ export function ScanSplitCheck({
     updateReceipt(nextReceipt);
   };
 
+  const handleDeleteItem = (itemId: string) => {
+    const nextReceipt = _.cloneDeep(editingReceipt);
+    const items = nextReceipt.items;
+    const itemIndex = items.findIndex((item) => item.id === itemId);
+    nextReceipt.items.splice(itemIndex, 1);
+    updateReceipt(nextReceipt);
+  };
+
   const updateItem = (
     itemId: string,
     newItemName: string,
@@ -151,6 +159,7 @@ export function ScanSplitCheck({
           party={party}
           updateItem={updateItem}
           handleAddBuyerNameToItem={handleAddBuyerNameToItem}
+          handleDelete={handleDeleteItem}
         />
       ))}
       {isEdit && (

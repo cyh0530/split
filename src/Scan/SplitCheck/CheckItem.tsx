@@ -32,6 +32,7 @@ interface CheckItemProps {
     name: string,
     index: number
   ) => void;
+  handleDelete: (itemId: string) => void;
 }
 
 export function CheckItem({
@@ -40,6 +41,7 @@ export function CheckItem({
   isEdit,
   updateItem,
   handleAddBuyerNameToItem,
+  handleDelete,
 }: CheckItemProps) {
   const [itemNameError, setItemNameError] = useState(false);
   const [unitPriceError, setUnitPriceError] = useState(false);
@@ -108,7 +110,7 @@ export function CheckItem({
                   multiline
                 />
                 <Box>
-                  <IconButton>
+                  <IconButton onClick={() => handleDelete(item.id)}>
                     <DeleteIcon />
                   </IconButton>
                 </Box>
