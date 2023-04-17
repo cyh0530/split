@@ -1,5 +1,7 @@
-import { IconButton, List, ListItem } from "@mui/material";
+import { Box, IconButton, List, ListItem, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import { Receipt } from "../../models/receipt";
 import { ReceiptItem } from "../../models/receiptItem";
 import { CheckItem } from "./CheckItem";
@@ -18,6 +20,7 @@ export function ScanSplitCheck({
   setReceipt,
 }: ScanSplitCheckProps) {
   const [isEdit, setIsEdit] = useState(false);
+  const [editingReceipt, setEditingReceipt] = useState<Receipt>(receipt);
 
   const handleAddBuyerNameToItem = (
     item: ReceiptItem,
@@ -48,7 +51,7 @@ export function ScanSplitCheck({
     nextReceipt.items[itemIndex].quantity = newQuantity;
     var totalPrice = parseFloat((newQuantity * newUnitPrice).toFixed(2));
     nextReceipt.items[itemIndex].totalPrice = totalPrice;
-    setReceipt(nextReceipt);
+    setEditingReceipt(nextReceipt);
   };
 
   const updateSummaryItem = (summaryType: string, value: number) => {
@@ -60,24 +63,46 @@ export function ScanSplitCheck({
     } else if (summaryType === "Total") {
       nextReceipt.totalPrice = value;
     }
-    setReceipt(nextReceipt);
+    setEditingReceipt(nextReceipt);
   };
-  // TODO: check if sub total + tax + tip = total
+
+  const onFinishEditing = () => {
+    setReceipt(editingReceipt)
+    setIsEdit(false);
+  };
+
+  const onCancelEditing = () => {
+    setReceipt(receipt);
+    setIsEdit(false);
+  };
 
   return (
     <List>
       <ListItem
         divider
         secondaryAction={
-          <IconButton onClick={() => setIsEdit(true)}>
-            <EditIcon />
-          </IconButton>
+          !isEdit ? (
+            <IconButton onClick={() => setIsEdit(true)}>
+              <EditIcon />
+            </IconButton>
+          ) : (
+            <Box display="flex" gap="1">
+              <IconButton color="success" onClick={onFinishEditing}>
+                <CheckIcon />
+              </IconButton>
+              <IconButton color="error" onClick={onCancelEditing}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          )
         }
+        sx={{ pb: 5 }}
       />
       {receipt.items.map((item) => (
         <CheckItem
           key={item.id}
           item={item}
+          isEdit={isEdit}
           party={party}
           updateItem={updateItem}
           handleAddBuyerNameToItem={handleAddBuyerNameToItem}
