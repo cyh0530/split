@@ -15,7 +15,11 @@ import _ from "lodash";
 import { Receipt, ReceiptItem } from "../../models";
 import { CheckItem } from "./CheckItem";
 import { CheckSummaryItem } from "./CheckSummaryItem";
-import { calculateReceiptTotal, calculateReceiptSubTotal } from "../../utils";
+import {
+  calculateReceiptTotal,
+  calculateReceiptSubTotal,
+  generateId,
+} from "../../utils";
 
 interface ScanSplitCheckProps {
   party: string[];
@@ -47,6 +51,19 @@ export function ScanSplitCheck({
       buyers[index].push(name);
     }
     setReceipt(nextReceipt);
+  };
+
+  const handleAddItem = () => {
+    const nextReceipt = _.cloneDeep(editingReceipt);
+    nextReceipt.items.push({
+      id: generateId(),
+      name: "",
+      unitPrice: 0,
+      quantity: 0,
+      totalPrice: 0,
+      buyers: [],
+    });
+    updateReceipt(nextReceipt);
   };
 
   const updateItem = (
@@ -137,7 +154,7 @@ export function ScanSplitCheck({
         />
       ))}
       {isEdit && (
-        <ListItemButton>
+        <ListItemButton onClick={handleAddItem}>
           <Typography color="text.secondary">+ Add Item</Typography>
         </ListItemButton>
       )}
