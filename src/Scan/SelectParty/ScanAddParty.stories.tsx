@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { Paper } from "@mui/material";
 import { ScanAddParty } from "./ScanAddParty";
 import { localStoragePartyKey } from "../../constants";
 import { storybookParties } from "../../stories/fakes/parties";
@@ -19,7 +20,17 @@ export default {
       context.args.setOpen = setOpen;
       context.args.newParty = newParty;
       context.args.setNewParty = setNewParty;
-      return <Story />;
+      return (
+        <Paper
+          elevation={3}
+          sx={({ breakpoints }) => ({
+            width: breakpoints.values.sm,
+            margin: "auto",
+          })}
+        >
+          <Story />
+        </Paper>
+      );
     },
   ],
 } as Meta<typeof ScanAddParty>;

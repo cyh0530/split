@@ -1,25 +1,56 @@
-import { StepButton, Step, Stepper, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import { MobileStepper, Button } from "@mui/material";
+import React from "react";
 
 interface ScanStepsProps {
   currentStep: number;
-  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  maxStep: number;
+  handleNext: (e: React.MouseEvent) => void;
+  handleBack: (e: React.MouseEvent) => void;
 }
 
-export function ScanSteps({ currentStep, setCurrentStep }: ScanStepsProps) {
-  const steps = ["Scan", "Party", "Split", "Result"];
+export function ScanSteps({
+  currentStep,
+  maxStep,
+  handleNext,
+  handleBack,
+}: ScanStepsProps) {
+  const theme = useTheme();
   return (
-    <Stepper>
-      {steps.map((step, index) => (
-        <Step
-          key={step}
-          active={index + 1 === currentStep}
-          completed={index + 1 <= currentStep}
+    <MobileStepper
+      sx={({ breakpoints }) => ({
+        width: "100%",
+        margin: "auto",
+        maxWidth: breakpoints.values.sm,
+      })}
+      variant="text"
+      steps={maxStep}
+      activeStep={currentStep}
+      nextButton={
+        <Button
+          size="small"
+          onClick={handleNext}
+          disabled={currentStep === maxStep - 1}
         >
-          <StepButton onClick={() => setCurrentStep(index)}>
-            <Typography variant="caption">{step}</Typography>
-          </StepButton>
-        </Step>
-      ))}
-    </Stepper>
+          Next
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowLeft />
+          ) : (
+            <KeyboardArrowRight />
+          )}
+        </Button>
+      }
+      backButton={
+        <Button size="small" onClick={handleBack} disabled={currentStep === 0}>
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowRight />
+          ) : (
+            <KeyboardArrowLeft />
+          )}
+          Back
+        </Button>
+      }
+    />
   );
 }
