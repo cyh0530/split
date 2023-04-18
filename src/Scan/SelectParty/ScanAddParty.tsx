@@ -12,6 +12,7 @@ import {
   Modal,
   Snackbar,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
@@ -23,12 +24,6 @@ interface ScanAddPartyProps {
   newParty: string[];
   setNewParty: React.Dispatch<React.SetStateAction<string[]>>;
 }
-
-const parties = [
-  ["Me", "James", "Kai", "Leo", "Vincent"],
-  ["Me", "James", "Kai", "Leo"],
-  ["Me", "Albert", "James", "Kai", "Leo", "Vincent"],
-];
 
 export function ScanAddParty({
   open,
@@ -44,11 +39,13 @@ export function ScanAddParty({
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
 
   useEffect(() => {
-    var names = parties.flat();
+    var names = localStorageParty.flat();
     names = names.filter((item, index) => names.indexOf(item) === index);
-    names.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
+    names.sort((a, b) =>
+      a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+    );
     setAllNames(names);
-  }, []);
+  }, [localStorageParty]);
 
   const handleSetNewParty = (name: string) => {
     const nameIndex = newParty.indexOf(name);
@@ -58,7 +55,9 @@ export function ScanAddParty({
     } else {
       nextNewParty.splice(nameIndex, 1);
     }
-    nextNewParty.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
+    nextNewParty.sort((a, b) =>
+      a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+    );
     setNewParty(nextNewParty);
   };
 
@@ -75,7 +74,9 @@ export function ScanAddParty({
       return;
     }
     nextAllNames.push(newName);
-    nextAllNames.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
+    nextAllNames.sort((a, b) =>
+      a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+    );
     handleSetNewParty(newName);
     setAllNames(nextAllNames);
     setNewName("");
@@ -83,9 +84,10 @@ export function ScanAddParty({
   };
 
   const handleSave = () => {
-    const nextLocalStorageParty = [...localStorageParty]
+    // TODO: if list exist, fail
+    const nextLocalStorageParty = [...localStorageParty];
     nextLocalStorageParty.unshift(newParty);
-    setLocalStorageParty(parties);
+    setLocalStorageParty(nextLocalStorageParty);
     setShowSuccessSnackbar(true);
     handleCloseModal();
   };
@@ -100,77 +102,105 @@ export function ScanAddParty({
     <>
       <Modal open={open}>
         <Box
-          sx={({breakpoints}) => ({
-            padding: 2,
+          sx={({ breakpoints }) => ({
             display: "flex",
-            flexDirection: "column",
-            gap: 1,
-            background: "white",
+            alignItems: "center",
+            justifyItems: "center",
             height: "100%",
-            overflow: "scroll",
             margin: "auto",
-            [breakpoints.down('sm')]: {
-              width: "100%"
+            padding: "10px",
+            [breakpoints.down("sm")]: {
+              width: "100%",
             },
-            [breakpoints.up('sm')]: {
-              width: breakpoints.values.sm
-            }
-            
+            [breakpoints.up("sm")]: {
+              width: breakpoints.values.sm,
+            },
           })}
         >
-          <Box sx={{ textAlign: "right" }}>
-            <IconButton onClick={handleCloseModal}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Box sx={{flex: 1, overflow: "auto"}}>
-            <List dense disablePadding>
-              {allNames.map((name) => (
-                <ListItem key={name} disableGutters>
-                  <ListItemButton onClick={() => handleSetNewParty(name)}>
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={newParty.indexOf(name) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                      />
-                    </ListItemIcon>
-                    <ListItemText primary={name} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-            <TextField
-              size="small"
-              value={newName}
-              helperText={addHelperText}
-              error={addError}
-              onChange={(e) => {
-                setNewName(e.target.value);
-                resetAddError();
+          <Box
+            sx={{
+              maxHeight: "600px",
+              flex: 1,
+              padding: 2,
+              height: "100%",
+              background: "white",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                height: "100%",
+                overflow: "scroll",
+                width: "100%",
               }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleAddName();
-                }
-              }}
-              placeholder="Add Name"
-            />
-            <Box>
-              <Button variant="outlined" onClick={handleAddName}>
-                Add
+            >
+              <Box sx={{ textAlign: "center", position: "relative" }}>
+                <Typography variant="h6">
+                  Select Who is in this party
+                </Typography>
+                <IconButton
+                  sx={{ position: "absolute", right: 0, top: 0 }}
+                  onClick={handleCloseModal}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+              <Box sx={{ flex: 1, overflow: "auto" }}>
+                <List dense disablePadding>
+                  {allNames.map((name) => (
+                    <ListItem key={name} disableGutters>
+                      <ListItemButton onClick={() => handleSetNewParty(name)}>
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={newParty.indexOf(name) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                          />
+                        </ListItemIcon>
+                        <ListItemText primary={name} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+                <TextField
+                  size="small"
+                  value={newName}
+                  helperText={addHelperText}
+                  error={addError}
+                  onChange={(e) => {
+                    setNewName(e.target.value);
+                    resetAddError();
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleAddName();
+                    }
+                  }}
+                  placeholder="Add Name"
+                />
+                <Box>
+                  <Button variant="outlined" onClick={handleAddName}>
+                    Add
+                  </Button>
+                </Box>
+              </Box>
+              <Button variant="contained" onClick={handleSave}>
+                Save
               </Button>
             </Box>
           </Box>
-          <Button variant="contained" onClick={handleSave}>
-            Save
-          </Button>
         </Box>
       </Modal>
       <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
         autoHideDuration={3000}
         open={showSuccessSnackbar}
         onClose={() => setShowSuccessSnackbar(false)}

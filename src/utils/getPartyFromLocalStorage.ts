@@ -1,14 +1,14 @@
 import { localStoragePartyKey } from "../constants";
 
 export function getPartyFromLocalStorage(): string[][] {
-  var localStorageParitesString = localStorage.getItem(localStoragePartyKey);
-  if (!!localStorageParitesString) {
-    try {
-      return JSON.parse(localStorageParitesString) as string[][];
-    } catch {
+ if (typeof window === "undefined") {
       return [];
     }
-  } else {
-    return [];
-  }
+    try {
+      const item = window.localStorage.getItem(localStoragePartyKey);
+      return item ? JSON.parse(item) : [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
 }

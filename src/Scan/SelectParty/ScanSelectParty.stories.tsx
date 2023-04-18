@@ -16,7 +16,6 @@ export default {
       const [currentParty, setCurrentParty] = useState<string[]>([]);
       context.args.currentParty = currentParty;
       context.args.setCurrentParty = setCurrentParty;
-      context.args.goToNextStep = () => {};
       return <Story />;
     },
   ],

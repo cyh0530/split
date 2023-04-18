@@ -1,19 +1,9 @@
 import { useState } from "react";
 import { localStoragePartyKey } from "../constants";
+import { getPartyFromLocalStorage } from "../utils";
 
 export function usePartyLocalStorage(): [string[][],  (newParty: string[][]) => void] {
-  const [party, setParty] = useState<string[][]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-    try {
-      const item = window.localStorage.getItem(localStoragePartyKey);
-      return item ? JSON.parse(item) : [];
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
-  });
+  const [party, setParty] = useState<string[][]>(getPartyFromLocalStorage);
   
   const setPartyWithLocalStorage = (newParty: string[][]) => {
     setParty(newParty)
@@ -21,5 +11,6 @@ export function usePartyLocalStorage(): [string[][],  (newParty: string[][]) => 
       window.localStorage.setItem(localStoragePartyKey, JSON.stringify(newParty));
     }
   }
+  
   return [party, setPartyWithLocalStorage];
 }

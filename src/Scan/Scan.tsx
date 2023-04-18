@@ -7,9 +7,14 @@ import { ScanResult } from "./ScanResult/ScanResult";
 import { SplitCheck } from "../models/splitCheck";
 import { Receipt } from "../models/receipt";
 import { calculateSplitCheck } from "../utils/calculateSplitCheck";
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 
-const steps = ["Scan", "Party", "Split", "Result"];
+const steps = [
+  "Upload Receipt",
+  "Select Party",
+  "Split the Check",
+  "Split Result",
+];
 
 export function Scan() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -27,41 +32,31 @@ export function Scan() {
   useEffect(() => {
     const newSplitCheck = calculateSplitCheck(party, receipt);
     setSplitCheck(newSplitCheck);
-  }, [receipt]);
+  }, [party, receipt]);
 
   const goToNextStep = () => setCurrentStep(currentStep + 1);
   const goToPrevStep = () => setCurrentStep(currentStep - 1);
   return (
-    <Box
-      sx={({ breakpoints }) => ({
-        display: "flex",
-        flexDirection: "column",
-        margin: "auto",
-        height:  "calc(100vh - 48px)",
-        overflow: "auto",
-        width: "100%",
-        position: "static",
-        maxWidth: breakpoints.values.sm,
-      })}
-    >
-      <Box sx={{ textAlign: "center" }}>
+    <Container maxWidth="sm">
+      <Box sx={{ textAlign: "center", my: 1 }}>
         <Typography variant="h6">{steps[currentStep]}</Typography>
       </Box>
 
       <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-          justifyContent: "center",
-        }}
+        sx={
+          {
+            // display: "flex",
+            // flexDirection: "column",
+            // flex: 1,
+            // justifyContent: "center",
+          }
+        }
       >
         {currentStep === 0 && <ScanReceipt file={file} setFile={setFile} />}
         {currentStep === 1 && (
           <ScanSelectParty
             currentParty={party}
             setCurrentParty={setCurrentParty}
-            goToNextStep={goToNextStep}
           />
         )}
         {currentStep === 2 && (
@@ -79,6 +74,6 @@ export function Scan() {
         handleNext={goToNextStep}
         handleBack={goToPrevStep}
       />
-    </Box>
+    </Container>
   );
 }
