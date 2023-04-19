@@ -1,6 +1,6 @@
 import ReactGA from "react-ga";
 import Manual from "./Manual";
-import { Scan } from "./Scan";
+import { Scan } from "./components/Scan";
 import CustomTheme from "./theme/createTheme";
 
 ReactGA.initialize("G-7RV8JZXMCF");

@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { Paper } from "@mui/material";
 import { ScanAddParty } from "./ScanAddParty";
-import { localStoragePartyKey } from "../../constants";
-import { storybookParties } from "../../stories/fakes/parties";
+import { localStoragePartyKey } from "../../../constants";
+import { storybookParties } from "../../../stories/fakes/parties";
 
 export default {
   title: "Scan Receipt/2 - Add Party",

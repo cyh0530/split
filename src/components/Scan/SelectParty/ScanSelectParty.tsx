@@ -14,8 +14,8 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Fragment, useState } from "react";
 import { ScanAddParty } from "./ScanAddParty";
-import { usePartyLocalStorage } from "../../hooks/usePartyLocalStorage";
-import { getPartyFromLocalStorage } from "../../utils";
+import { usePartyLocalStorage } from "../../../hooks/usePartyLocalStorage";
+import { getPartyFromLocalStorage } from "../../../utils";
 import _ from "lodash";
 
 interface ScanSelectPartyProps {

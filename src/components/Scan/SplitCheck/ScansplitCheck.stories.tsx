@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { ScanSplitCheck } from "./ScanSplitCheck";
 import { useState } from "react";
-import { Receipt } from "../../models/receipt";
-import { storybookParties } from "../../stories/fakes/parties";
-import { receipt } from "../../stories/fakes/receipt";
+import { Receipt } from "../../../models/receipt";
+import { storybookParties } from "../../../stories/fakes/parties";
+import { receipt } from "../../../stories/fakes/receipt";
 import { Box } from "@mui/material";
 
 export default {

@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { SplitCheck } from "../../models/splitCheck";
+import { SplitCheck } from "../../../models/splitCheck";
 
 
 interface ScanResultItemProps {

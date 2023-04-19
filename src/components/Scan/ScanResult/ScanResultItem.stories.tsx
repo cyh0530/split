@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ScanResultItem } from "./ScanResultItem";
-import { splitCheckResults } from "../../stories/fakes/splitResult";
+import { splitCheckResults } from "../../../stories/fakes/splitResult";
 
 export default {
     title: "Scan Receipt/4 - Result Item",

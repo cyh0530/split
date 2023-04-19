@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRef, useState } from "react";
-import { round } from "../../utils";
+import { round } from "../../../utils";
 
 interface CheckSummaryItemProps {
   isEdit: boolean;

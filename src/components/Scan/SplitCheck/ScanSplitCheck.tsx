@@ -12,14 +12,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import _ from "lodash";
-import { Receipt, ReceiptItem } from "../../models";
+import { Receipt, ReceiptItem } from "../../../models";
 import { CheckItem } from "./CheckItem";
 import { CheckSummaryItem } from "./CheckSummaryItem";
 import {
   calculateReceiptTotal,
   calculateReceiptSubTotal,
   generateId,
-} from "../../utils";
+} from "../../../utils";
 
 interface ScanSplitCheckProps {
   party: string[];

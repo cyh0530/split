@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ScanResult } from "./ScanResult";
-import { splitCheckResults } from "../../stories/fakes/splitResult";
+import { splitCheckResults } from "../../../stories/fakes/splitResult";
 import { Box } from "@mui/material";
 
 export default {

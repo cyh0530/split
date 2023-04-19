@@ -15,7 +15,7 @@ import {
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import { ReceiptItem } from "../../models/receiptItem";
+import { ReceiptItem } from "../../../models/receiptItem";
 
 interface CheckItemProps {
   item: ReceiptItem;

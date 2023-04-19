@@ -4,9 +4,9 @@ import { ScanReceipt } from "./ScanReceipt/ScanReceipt";
 import { ScanSelectParty } from "./SelectParty";
 import { ScanSplitCheck } from "./SplitCheck";
 import { ScanResult } from "./ScanResult/ScanResult";
-import { SplitCheck } from "../models/splitCheck";
-import { Receipt } from "../models/receipt";
-import { calculateSplitCheck } from "../utils/calculateSplitCheck";
+import { SplitCheck } from "../../models/splitCheck";
+import { Receipt } from "../../models/receipt";
+import { calculateSplitCheck } from "../../utils/calculateSplitCheck";
 import { Box, Container, Typography } from "@mui/material";
 
 const steps = [
