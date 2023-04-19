@@ -151,32 +151,30 @@ export function ScanSplitCheck({
   };
 
   return (
-    <ScanContainer title="Split the Check">
+    <ScanContainer
+      title="Split the Check"
+      titleIcon={
+        !isEdit ? (
+          <IconButton onClick={() => setIsEdit(true)}>
+            <EditIcon />
+          </IconButton>
+        ) : (
+          <Box display="flex" gap="1">
+            <IconButton
+              disabled={disableFinishEditBtn}
+              color="success"
+              onClick={onFinishEditing}
+            >
+              <CheckIcon />
+            </IconButton>
+            <IconButton color="error" onClick={onCancelEditing}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        )
+      }
+    >
       <List>
-        <ListItem
-          divider
-          secondaryAction={
-            !isEdit ? (
-              <IconButton onClick={() => setIsEdit(true)}>
-                <EditIcon />
-              </IconButton>
-            ) : (
-              <Box display="flex" gap="1">
-                <IconButton
-                  disabled={disableFinishEditBtn}
-                  color="success"
-                  onClick={onFinishEditing}
-                >
-                  <CheckIcon />
-                </IconButton>
-                <IconButton color="error" onClick={onCancelEditing}>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            )
-          }
-          sx={{ pb: 5 }}
-        />
         {editingReceipt.items.map((item) => (
           <CheckItem
             key={item.id}

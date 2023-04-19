@@ -5,24 +5,22 @@ import React from "react";
 interface ScanContainerProps {
   title: string;
   titleIcon?: JSX.Element;
-  titleIconOnClick?: () => void;
   children: React.ReactNode;
 }
 
 export function ScanContainer({
   title,
   titleIcon,
-  titleIconOnClick,
   children
 }: ScanContainerProps) {
   return (
     <Box>
-      <Header title={title} icon={titleIcon} onClick={titleIconOnClick} />
+      <Header title={title} icon={titleIcon}/>
       <Box
         sx={
           {
             height: "calc(100vh - 90px)",
-            overflow: "auto"
+            overflow: "auto",
           }
         }
       >

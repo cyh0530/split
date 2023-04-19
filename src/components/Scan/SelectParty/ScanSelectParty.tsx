@@ -72,10 +72,13 @@ export function ScanSelectParty({
   return (
     <ScanContainer
       title="Select Party"
-      titleIcon={<EditIcon />}
-      titleIconOnClick={handleEdit}
+      titleIcon={
+        <IconButton onClick={handleEdit}>
+          <EditIcon />
+        </IconButton>
+      }
     >
-      <List dense disablePadding>
+      <List dense disablePadding sx={{ paddingBottom: 12 }}>
         {localStorageParty.map((party) => (
           <Fragment key={party.join("-")}>
             <ListItem
