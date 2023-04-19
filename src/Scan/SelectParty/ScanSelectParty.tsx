@@ -8,6 +8,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
+  ListItemText,
   Radio,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -15,6 +16,7 @@ import { Fragment, useState } from "react";
 import { ScanAddParty } from "./ScanAddParty";
 import { usePartyLocalStorage } from "../../hooks/usePartyLocalStorage";
 import { getPartyFromLocalStorage } from "../../utils";
+import _ from "lodash";
 
 interface ScanSelectPartyProps {
   currentParty: string[];
@@ -48,6 +50,7 @@ export function ScanSelectParty({
   const [openAddPartyModal, setOpenAddPartyModal] = useState(false);
   const [newParty, setNewParty] = useState<string[]>([]);
   const localStorageParty = getPartyFromLocalStorage();
+
   const handleDelete = (party: string[]) => {
     const nextLocalStorageParty = [...localStorageParty];
     var partyIndex = indexOfParty(nextLocalStorageParty, party);
@@ -57,7 +60,9 @@ export function ScanSelectParty({
     }
   };
 
-  console.log(localStorageParty)
+  const handleSelectParty = (party: string[]) => {
+    setCurrentParty(party);
+  };
 
   return (
     <>
@@ -77,19 +82,19 @@ export function ScanSelectParty({
             >
               <ListItemButton
                 onClick={() => {
-                  setCurrentParty(party);
+                  handleSelectParty(party);
                 }}
               >
                 <ListItemIcon>
-                  <Radio checked={currentParty === party} />
+                  <Radio checked={_.isEqual(currentParty, party)} />
                 </ListItemIcon>
-                {/* <ListItemText sx={{width: "100%"}}> */}
+                <ListItemText >
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                   {party.map((name) => (
                     <Chip size="small" key={name} label={name} />
                   ))}
                 </Box>
-                {/* </ListItemText> */}
+                </ListItemText>
               </ListItemButton>
             </ListItem>
             <Divider variant="inset" component="li" />
@@ -110,7 +115,7 @@ export function ScanSelectParty({
           variant="contained"
           onClick={() => setOpenAddPartyModal(true)}
         >
-          Add Party
+          Add Names
         </Button>
       </Box>
       <ScanAddParty
@@ -118,6 +123,7 @@ export function ScanSelectParty({
         setOpen={setOpenAddPartyModal}
         newParty={newParty}
         setNewParty={setNewParty}
+        setSelectParty={handleSelectParty}
       />
     </>
   );

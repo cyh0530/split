@@ -17,12 +17,14 @@ import {
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { usePartyLocalStorage } from "../../hooks/usePartyLocalStorage";
+import _ from "lodash";
 
 interface ScanAddPartyProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   newParty: string[];
   setNewParty: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectParty: (party: string[]) => void;
 }
 
 export function ScanAddParty({
@@ -30,6 +32,7 @@ export function ScanAddParty({
   setOpen,
   newParty,
   setNewParty,
+  setSelectParty
 }: ScanAddPartyProps) {
   const [allNames, setAllNames] = useState<string[]>([]);
   const [newName, setNewName] = useState("");
@@ -84,11 +87,20 @@ export function ScanAddParty({
   };
 
   const handleSave = () => {
-    // TODO: if list exist, fail
-    const nextLocalStorageParty = [...localStorageParty];
-    nextLocalStorageParty.unshift(newParty);
-    setLocalStorageParty(nextLocalStorageParty);
-    setShowSuccessSnackbar(true);
+    let alreadyContains = false;
+    localStorageParty.forEach(party => {
+      if (_.isEqual(party, newParty)) {
+        alreadyContains = true;
+      }
+    })
+    
+    if (!alreadyContains) {
+      const nextLocalStorageParty = [...localStorageParty];
+      nextLocalStorageParty.unshift(newParty);
+      setLocalStorageParty(nextLocalStorageParty);  
+      setShowSuccessSnackbar(true);
+    }
+    setSelectParty(newParty)
     handleCloseModal();
   };
 
@@ -138,10 +150,10 @@ export function ScanAddParty({
             >
               <Box sx={{ textAlign: "center", position: "relative" }}>
                 <Typography variant="h6">
-                  Select Who is in this party
+                  Who is splitting the check
                 </Typography>
                 <IconButton
-                  sx={{ position: "absolute", right: 0, top: 0 }}
+                  sx={{ position: "absolute", right: 0, top: 0, padding: "5px" }}
                   onClick={handleCloseModal}
                 >
                   <CloseIcon />

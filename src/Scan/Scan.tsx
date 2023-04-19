@@ -37,7 +37,7 @@ export function Scan() {
   const goToNextStep = () => setCurrentStep(currentStep + 1);
   const goToPrevStep = () => setCurrentStep(currentStep - 1);
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" disableGutters>
       <Box sx={{ textAlign: "center", my: 1 }}>
         <Typography variant="h6">{steps[currentStep]}</Typography>
       </Box>
@@ -45,10 +45,8 @@ export function Scan() {
       <Box
         sx={
           {
-            // display: "flex",
-            // flexDirection: "column",
-            // flex: 1,
-            // justifyContent: "center",
+            height: "calc(100vh - 90px)",
+            overflow: "auto"
           }
         }
       >
