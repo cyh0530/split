@@ -38,34 +38,21 @@ export function Scan() {
   const goToPrevStep = () => setCurrentStep(currentStep - 1);
   return (
     <Container maxWidth="sm" disableGutters>
-      <Box sx={{ textAlign: "center", my: 1 }}>
-        <Typography variant="h6">{steps[currentStep]}</Typography>
-      </Box>
-
-      <Box
-        sx={
-          {
-            height: "calc(100vh - 90px)",
-            overflow: "auto"
-          }
-        }
-      >
-        {currentStep === 0 && <ScanReceipt file={file} setFile={setFile} />}
-        {currentStep === 1 && (
-          <ScanSelectParty
-            currentParty={party}
-            setCurrentParty={setCurrentParty}
-          />
-        )}
-        {currentStep === 2 && (
-          <ScanSplitCheck
-            party={party}
-            receipt={receipt}
-            setReceipt={setReceipt}
-          />
-        )}
-        {currentStep === 3 && <ScanResult splitCheck={splitCheck} />}
-      </Box>
+      {currentStep === 0 && <ScanReceipt file={file} setFile={setFile} />}
+      {currentStep === 1 && (
+        <ScanSelectParty
+          currentParty={party}
+          setCurrentParty={setCurrentParty}
+        />
+      )}
+      {currentStep === 2 && (
+        <ScanSplitCheck
+          party={party}
+          receipt={receipt}
+          setReceipt={setReceipt}
+        />
+      )}
+      {currentStep === 3 && <ScanResult splitCheck={splitCheck} />}
       <ScanSteps
         currentStep={currentStep}
         maxStep={steps.length}

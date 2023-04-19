@@ -1,5 +1,6 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useState } from "react";
+import { ScanContainer } from "../ScanContainer";
 
 interface ScanReceiptProps {
   file: File | null;
@@ -18,32 +19,34 @@ export function ScanReceipt({ file, setFile }: ScanReceiptProps) {
   };
 
   return (
-    <Box
-      sx={{
-        textAlign: "center",
-        display: "flex",
-        alignContent: "space-around",
-        justifyContent: "space-around",
-        flexDirection: "column",
-        gap: 2,
-      }}
-    >
-      <Box>
-        <Button variant="contained" component="label">
-          {image === "" ? "Upload Receipt" : "Replace Receipt"}
-          <input
-            hidden
-            accept="image/*"
-            type="file"
-            onChange={handleOnChange}
-          />
-        </Button>
+    <ScanContainer title="Upload Receipt">
+      <Box
+        sx={{
+          textAlign: "center",
+          display: "flex",
+          alignContent: "space-around",
+          justifyContent: "space-around",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        <Box>
+          <Button variant="contained" component="label">
+            {image === "" ? "Upload Receipt" : "Replace Receipt"}
+            <input
+              hidden
+              accept="image/*"
+              type="file"
+              onChange={handleOnChange}
+            />
+          </Button>
+        </Box>
+        {image !== "" && (
+          <Paper sx={{ width: "100%" }} elevation={3}>
+            <img src={image} alt="receipt" width="100%" />
+          </Paper>
+        )}
       </Box>
-      {image !== "" && (
-        <Paper sx={{ width: "100%" }} elevation={3}>
-          <img src={image} alt="receipt" width="100%" />
-        </Paper>
-      )}
-    </Box>
+    </ScanContainer>
   );
 }

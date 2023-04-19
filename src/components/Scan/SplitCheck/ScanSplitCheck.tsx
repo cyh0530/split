@@ -20,6 +20,7 @@ import {
   calculateReceiptSubTotal,
   generateId,
 } from "../../../utils";
+import { ScanContainer } from "../ScanContainer";
 
 interface ScanSplitCheckProps {
   party: string[];
@@ -121,7 +122,7 @@ export function ScanSplitCheck({
   };
 
   const checkReceiptValidity = (receipt: Receipt) => {
-    console.log(receipt)
+    console.log(receipt);
     let disableFinishBtn = false;
     receipt.items.forEach((item) => {
       if (
@@ -150,81 +151,83 @@ export function ScanSplitCheck({
   };
 
   return (
-    <List>
-      <ListItem
-        divider
-        secondaryAction={
-          !isEdit ? (
-            <IconButton onClick={() => setIsEdit(true)}>
-              <EditIcon />
-            </IconButton>
-          ) : (
-            <Box display="flex" gap="1">
-              <IconButton
-                disabled={disableFinishEditBtn}
-                color="success"
-                onClick={onFinishEditing}
-              >
-                <CheckIcon />
+    <ScanContainer title="Split the Check">
+      <List>
+        <ListItem
+          divider
+          secondaryAction={
+            !isEdit ? (
+              <IconButton onClick={() => setIsEdit(true)}>
+                <EditIcon />
               </IconButton>
-              <IconButton color="error" onClick={onCancelEditing}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          )
-        }
-        sx={{ pb: 5 }}
-      />
-      {editingReceipt.items.map((item) => (
-        <CheckItem
-          key={item.id}
-          item={item}
-          isEdit={isEdit}
-          party={party}
-          updateItem={updateItem}
-          handleAddBuyerNameToItem={handleAddBuyerNameToItem}
-          handleDelete={handleDeleteItem}
+            ) : (
+              <Box display="flex" gap="1">
+                <IconButton
+                  disabled={disableFinishEditBtn}
+                  color="success"
+                  onClick={onFinishEditing}
+                >
+                  <CheckIcon />
+                </IconButton>
+                <IconButton color="error" onClick={onCancelEditing}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            )
+          }
+          sx={{ pb: 5 }}
         />
-      ))}
-      {isEdit && (
-        <ListItemButton onClick={handleAddItem}>
-          <Typography color="text.secondary">+ Add Item</Typography>
-        </ListItemButton>
-      )}
-      <ListItem dense>
-        <ListItemText disableTypography>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="body2">Subtotal</Typography>
-            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-              ${editingReceipt.subTotal}
-            </Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <CheckSummaryItem
-        isEdit={isEdit}
-        summaryType={"Tax"}
-        subTotal={editingReceipt.subTotal}
-        value={editingReceipt.tax}
-        updateItem={updateSummaryItem}
-      />
-      <CheckSummaryItem
-        isEdit={isEdit}
-        summaryType={"Tip"}
-        subTotal={editingReceipt.subTotal}
-        value={editingReceipt.tip}
-        updateItem={updateSummaryItem}
-      />
-      <ListItem dense>
-        <ListItemText disableTypography>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>Total</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>
-              ${editingReceipt.totalPrice}
-            </Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-    </List>
+        {editingReceipt.items.map((item) => (
+          <CheckItem
+            key={item.id}
+            item={item}
+            isEdit={isEdit}
+            party={party}
+            updateItem={updateItem}
+            handleAddBuyerNameToItem={handleAddBuyerNameToItem}
+            handleDelete={handleDeleteItem}
+          />
+        ))}
+        {isEdit && (
+          <ListItemButton onClick={handleAddItem}>
+            <Typography color="text.secondary">+ Add Item</Typography>
+          </ListItemButton>
+        )}
+        <ListItem dense>
+          <ListItemText disableTypography>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="body2">Subtotal</Typography>
+              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                ${editingReceipt.subTotal}
+              </Typography>
+            </Box>
+          </ListItemText>
+        </ListItem>
+        <CheckSummaryItem
+          isEdit={isEdit}
+          summaryType={"Tax"}
+          subTotal={editingReceipt.subTotal}
+          value={editingReceipt.tax}
+          updateItem={updateSummaryItem}
+        />
+        <CheckSummaryItem
+          isEdit={isEdit}
+          summaryType={"Tip"}
+          subTotal={editingReceipt.subTotal}
+          value={editingReceipt.tip}
+          updateItem={updateSummaryItem}
+        />
+        <ListItem dense>
+          <ListItemText disableTypography>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>Total</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>
+                ${editingReceipt.totalPrice}
+              </Typography>
+            </Box>
+          </ListItemText>
+        </ListItem>
+      </List>
+    </ScanContainer>
   );
 }

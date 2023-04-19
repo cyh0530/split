@@ -2,13 +2,14 @@ import { Box, Divider, List, ListItem, ListItemText, Typography } from "@mui/mat
 import { SplitCheck } from "../../../models/splitCheck";
 import { ScanResultItem } from "./ScanResultItem";
 import { Fragment } from "react";
+import { ScanContainer } from "../ScanContainer";
 
 interface ScanResultProps {
   splitCheck: SplitCheck[];
 }
 export function ScanResult({ splitCheck }: ScanResultProps) {
   return (
-    <Box>
+    <ScanContainer title="Result">
       <List>
         {splitCheck.map((buyer) => (
           <Fragment key={buyer.name}>
@@ -21,6 +22,6 @@ export function ScanResult({ splitCheck }: ScanResultProps) {
           <Typography>$123</Typography>
         </ListItem>
       </List>
-    </Box>
+    </ScanContainer>
   );
 }

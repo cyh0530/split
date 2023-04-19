@@ -12,11 +12,13 @@ import {
   Radio,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { Fragment, useState } from "react";
 import { ScanAddParty } from "./ScanAddParty";
 import { usePartyLocalStorage } from "../../../hooks/usePartyLocalStorage";
 import { getPartyFromLocalStorage } from "../../../utils";
 import _ from "lodash";
+import { ScanContainer } from "../ScanContainer";
 
 interface ScanSelectPartyProps {
   currentParty: string[];
@@ -49,6 +51,7 @@ export function ScanSelectParty({
   const [, setLocalStorageParty] = usePartyLocalStorage();
   const [openAddPartyModal, setOpenAddPartyModal] = useState(false);
   const [newParty, setNewParty] = useState<string[]>([]);
+  const [isEdit, setIsEdit] = useState(false);
   const localStorageParty = getPartyFromLocalStorage();
 
   const handleDelete = (party: string[]) => {
@@ -64,8 +67,14 @@ export function ScanSelectParty({
     setCurrentParty(party);
   };
 
+  const handleEdit = () => {};
+
   return (
-    <>
+    <ScanContainer
+      title="Select Party"
+      titleIcon={<EditIcon />}
+      titleIconOnClick={handleEdit}
+    >
       <List dense disablePadding>
         {localStorageParty.map((party) => (
           <Fragment key={party.join("-")}>
@@ -88,12 +97,12 @@ export function ScanSelectParty({
                 <ListItemIcon>
                   <Radio checked={_.isEqual(currentParty, party)} />
                 </ListItemIcon>
-                <ListItemText >
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                  {party.map((name) => (
-                    <Chip size="small" key={name} label={name} />
-                  ))}
-                </Box>
+                <ListItemText>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {party.map((name) => (
+                      <Chip size="small" key={name} label={name} />
+                    ))}
+                  </Box>
                 </ListItemText>
               </ListItemButton>
             </ListItem>
@@ -125,6 +134,6 @@ export function ScanSelectParty({
         setNewParty={setNewParty}
         setSelectParty={handleSelectParty}
       />
-    </>
+    </ScanContainer>
   );
 }
