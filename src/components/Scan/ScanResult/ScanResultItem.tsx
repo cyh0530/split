@@ -12,7 +12,6 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { SplitCheck } from "../../../models/splitCheck";
 
-
 interface ScanResultItemProps {
   buyer: SplitCheck;
 }
@@ -36,7 +35,7 @@ export function ScanResultItem({ buyer }: ScanResultItemProps) {
       <Collapse in={open}>
         <List component="div" dense sx={{ pl: 4 }}>
           {buyer.items.map((item) => (
-            <ListItem>
+            <ListItem key={item.id}>
               <ListItemIcon>
                 {/* <Fastfood /> */}
                 <Typography>{item.quantity}</Typography>
