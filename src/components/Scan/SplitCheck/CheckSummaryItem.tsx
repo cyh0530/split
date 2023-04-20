@@ -56,7 +56,6 @@ export function CheckSummaryItem({
                 label={summaryType}
                 defaultValue={value}
                 size="small"
-                helperText={valueError && "Please enter a valid number"}
                 onChange={handleItemChange}
                 variant="standard"
                 sx={{ width: 85 }}

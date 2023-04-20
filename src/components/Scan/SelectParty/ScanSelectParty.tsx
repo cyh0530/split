@@ -14,7 +14,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ScanAddParty } from "./ScanAddParty";
 import { usePartyLocalStorage } from "../../../hooks/usePartyLocalStorage";
 import { getPartyFromLocalStorage } from "../../../utils";
@@ -24,6 +24,7 @@ import { ScanContainer } from "../ScanContainer";
 interface ScanSelectPartyProps {
   currentParty: string[];
   setCurrentParty: React.Dispatch<React.SetStateAction<string[]>>;
+  setDisableNextStep: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const indexOfParty = (parties: string[][], party: string[]) => {
@@ -39,6 +40,7 @@ const indexOfParty = (parties: string[][], party: string[]) => {
 export function ScanSelectParty({
   currentParty,
   setCurrentParty,
+  setDisableNextStep
 }: ScanSelectPartyProps) {
   const [, setLocalStorageParty] = usePartyLocalStorage();
   const [openAddPartyModal, setOpenAddPartyModal] = useState(false);
@@ -62,6 +64,14 @@ export function ScanSelectParty({
   const handleEdit = () => {
     setIsEdit(!isEdit);
   };
+
+  useEffect(() => {
+    if (isEdit || currentParty.length === 0) {
+      setDisableNextStep(true)
+    } else {
+      setDisableNextStep(false)
+    }
+  }, [isEdit, currentParty])
 
   return (
     <ScanContainer

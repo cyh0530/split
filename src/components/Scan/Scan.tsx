@@ -20,6 +20,8 @@ const steps = [
 
 export function Scan() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [disableNextStep, setDisableNextStep] = useState(false);
+  const [disablePrevStep, setDisablePrevStep] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [receipt, setReceipt] = useState<Receipt>(fakeInitialReceipt);
   const [party, setCurrentParty] = useState<string[]>([]);
@@ -28,31 +30,42 @@ export function Scan() {
   useEffect(() => {
     // reset receipt buyers
     const nextReceipt = _.cloneDeep(receipt);
-    nextReceipt.items.forEach(item => {
+    nextReceipt.items.forEach((item) => {
       const quantity = item.quantity;
-      const newBuyers = []
-      for(let i = 0; i < quantity; i += 1) {
-        newBuyers.push([])
+      const newBuyers = [];
+      for (let i = 0; i < quantity; i += 1) {
+        newBuyers.push([]);
       }
-      item.buyers = newBuyers
-    })
+      item.buyers = newBuyers;
+    });
     setReceipt(nextReceipt);
-  }, [party])
+  }, [party]);
 
-  useEffect(() => {  
+  useEffect(() => {
     const newSplitCheck = calculateSplitCheck(party, receipt);
     setSplitCheck(newSplitCheck);
   }, [party, receipt]);
 
-  const goToNextStep = () => setCurrentStep(currentStep + 1);
+  const goToNextStep = () => {
+    setCurrentStep(currentStep + 1);
+    setDisableNextStep(true);
+  };
+
   const goToPrevStep = () => setCurrentStep(currentStep - 1);
   return (
     <Container maxWidth="sm" disableGutters>
-      {currentStep === 0 && <ScanReceipt file={file} setFile={setFile} />}
+      {currentStep === 0 && (
+        <ScanReceipt
+          file={file}
+          setFile={setFile}
+          setDisableNextStep={setDisableNextStep}
+        />
+      )}
       {currentStep === 1 && (
         <ScanSelectParty
           currentParty={party}
           setCurrentParty={setCurrentParty}
+          setDisableNextStep={setDisableNextStep}
         />
       )}
       {currentStep === 2 && (
@@ -60,12 +73,16 @@ export function Scan() {
           party={party}
           receipt={receipt}
           setReceipt={setReceipt}
+          setDisableNextStep={setDisableNextStep}
+          setDisablePrevStep={setDisablePrevStep}
         />
       )}
       {currentStep === 3 && <ScanResult splitCheck={splitCheck} />}
       <ScanSteps
         currentStep={currentStep}
         maxStep={steps.length}
+        disableNextStep={disableNextStep}
+        disablePrevStep={disablePrevStep}
         handleNext={goToNextStep}
         handleBack={goToPrevStep}
       />

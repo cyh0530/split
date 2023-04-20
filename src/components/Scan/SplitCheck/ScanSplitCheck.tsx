@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -27,16 +27,38 @@ interface ScanSplitCheckProps {
   party: string[];
   receipt: Receipt;
   setReceipt: React.Dispatch<React.SetStateAction<Receipt>>;
+  setDisableNextStep: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisablePrevStep: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ScanSplitCheck({
   party,
   receipt,
   setReceipt,
+  setDisableNextStep,
+  setDisablePrevStep
 }: ScanSplitCheckProps) {
   const [isEdit, setIsEdit] = useState(false);
   const [disableFinishEditBtn, setDisableFinishEditBtn] = useState(false);
   const [editingReceipt, setEditingReceipt] = useState<Receipt>(receipt);
+
+  useEffect(() => {
+    // auto correct sub total and total
+    updateReceipt(receipt);
+  }, [])
+
+  useEffect(() => {
+    let someItemNotSelected = false;
+    receipt.items.forEach(item => {
+      item.buyers.forEach(unitBuyers => {
+        if (unitBuyers.length === 0) {
+          someItemNotSelected = true;
+        }
+      })
+    })
+    setDisableNextStep(isEdit || someItemNotSelected)
+    setDisablePrevStep(isEdit)
+  }, [isEdit, receipt])
 
   const handleAddBuyerNameToItem = (
     item: ReceiptItem,
@@ -123,7 +145,6 @@ export function ScanSplitCheck({
   };
 
   const checkReceiptValidity = (receipt: Receipt) => {
-    console.log(receipt);
     let disableFinishBtn = false;
     receipt.items.forEach((item) => {
       if (
@@ -146,7 +167,6 @@ export function ScanSplitCheck({
   };
 
   const onCancelEditing = () => {
-    console.log(receipt);
     setEditingReceipt(receipt);
     setIsEdit(false);
   };

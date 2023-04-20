@@ -114,7 +114,6 @@ export function CheckItem({
                   defaultValue={item.name}
                   size="small"
                   variant="standard"
-                  helperText={itemNameError && "Please enter an item name"}
                   onChange={handleItemChange}
                   multiline
                 />
@@ -161,9 +160,6 @@ export function CheckItem({
                       defaultValue={item.unitPrice}
                       size="small"
                       variant="standard"
-                      helperText={
-                        unitPriceError && "Please enter a valid number"
-                      }
                       onChange={handleItemChange}
                       sx={{ width: 85 }}
                     />
@@ -180,9 +176,6 @@ export function CheckItem({
                       defaultValue={item.quantity}
                       size="small"
                       variant="standard"
-                      helperText={
-                        quantityError && "Please enter a valid number"
-                      }
                       onChange={handleItemChange}
                       sx={{ width: 85 }}
                     />

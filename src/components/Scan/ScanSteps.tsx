@@ -6,6 +6,8 @@ import React from "react";
 interface ScanStepsProps {
   currentStep: number;
   maxStep: number;
+  disableNextStep: boolean;
+  disablePrevStep: boolean;
   handleNext: (e: React.MouseEvent) => void;
   handleBack: (e: React.MouseEvent) => void;
 }
@@ -13,6 +15,8 @@ interface ScanStepsProps {
 export function ScanSteps({
   currentStep,
   maxStep,
+  disableNextStep,
+  disablePrevStep,
   handleNext,
   handleBack,
 }: ScanStepsProps) {
@@ -38,37 +42,35 @@ export function ScanSteps({
           justifyItems: "center",
         }}
       >
-        <Button
-          // size="small"
-          sx={{ height: "100%" }}
-          onClick={handleBack}
-          disabled={currentStep === 0}
-        >
-          {theme.direction === "rtl" ? (
-            <KeyboardArrowRight />
-          ) : (
-            <KeyboardArrowLeft />
-          )}
-          Back
-        </Button>
+        {currentStep !== 0 && (
+          <Button
+            sx={{ height: "100%" }}
+            onClick={handleBack}
+            disabled={currentStep === 0 || disablePrevStep}
+          >
+            {theme.direction === "rtl" ? (
+              <KeyboardArrowRight />
+            ) : (
+              <KeyboardArrowLeft />
+            )}
+            Back
+          </Button>
+        )}
 
-        <Box sx={{ flex: 1, textAlign: "center" }}>
-          <Typography>Step Name</Typography>
-        </Box>
-
-        <Button
-          // size="small"
-          sx={{ height: "100%" }}
-          onClick={handleNext}
-          disabled={currentStep === maxStep - 1}
-        >
-          Next
-          {theme.direction === "rtl" ? (
-            <KeyboardArrowLeft />
-          ) : (
-            <KeyboardArrowRight />
-          )}
-        </Button>
+        {currentStep !== maxStep - 1 && (
+          <Button
+            sx={{ height: "100%" }}
+            onClick={handleNext}
+            disabled={disableNextStep}
+          >
+            Next
+            {theme.direction === "rtl" ? (
+              <KeyboardArrowLeft />
+            ) : (
+              <KeyboardArrowRight />
+            )}
+          </Button>
+        )}
       </Box>
       {/* <MobileStepper
         sx={({ breakpoints }) => ({
