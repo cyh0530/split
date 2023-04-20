@@ -12,6 +12,7 @@ import {
   Radio,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import { Fragment, useState } from "react";
 import { ScanAddParty } from "./ScanAddParty";
@@ -26,22 +27,13 @@ interface ScanSelectPartyProps {
 }
 
 const indexOfParty = (parties: string[][], party: string[]) => {
+  let partyIndex = -1;
   parties.forEach((currentParty, index) => {
-    if (currentParty.length === party.length) {
-      const currentPartyCopy = [...currentParty];
-      const partyCopy = [...party];
-      var allEqual = true;
-      for (let i = 0; i < currentPartyCopy.length; i += 1) {
-        if (currentPartyCopy[i] !== partyCopy[i]) {
-          allEqual = false;
-        }
-      }
-      if (allEqual) {
-        return index;
-      }
+    if (_.isEqual(party, currentParty)) {
+      partyIndex = index;
     }
   });
-  return -1;
+  return partyIndex;
 };
 
 export function ScanSelectParty({
@@ -55,11 +47,11 @@ export function ScanSelectParty({
   const localStorageParty = getPartyFromLocalStorage();
 
   const handleDelete = (party: string[]) => {
+    var partyIndex = indexOfParty(localStorageParty, party);
     const nextLocalStorageParty = [...localStorageParty];
-    var partyIndex = indexOfParty(nextLocalStorageParty, party);
     if (partyIndex !== -1) {
-      const partiesAfterDelete = nextLocalStorageParty.splice(partyIndex, 1);
-      setLocalStorageParty(partiesAfterDelete);
+      nextLocalStorageParty.splice(partyIndex, 1);
+      setLocalStorageParty(nextLocalStorageParty);
     }
   };
 
@@ -67,14 +59,16 @@ export function ScanSelectParty({
     setCurrentParty(party);
   };
 
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    setIsEdit(!isEdit);
+  };
 
   return (
     <ScanContainer
       title="Select Party"
       titleIcon={
         <IconButton onClick={handleEdit}>
-          <EditIcon />
+          {isEdit ? <CheckIcon color="success" /> : <EditIcon />}
         </IconButton>
       }
     >
@@ -84,9 +78,11 @@ export function ScanSelectParty({
             <ListItem
               disablePadding
               secondaryAction={
-                <IconButton onClick={() => handleDelete(party)}>
-                  <DeleteIcon />
-                </IconButton>
+                isEdit ? (
+                  <IconButton onClick={() => handleDelete(party)}>
+                    <DeleteIcon />
+                  </IconButton>
+                ) : null
               }
               sx={{
                 paddingY: 1,
@@ -94,12 +90,15 @@ export function ScanSelectParty({
             >
               <ListItemButton
                 onClick={() => {
-                  handleSelectParty(party);
+                  isEdit ? handleDelete(party) : handleSelectParty(party);
                 }}
               >
                 <ListItemIcon>
-                  <Radio checked={_.isEqual(currentParty, party)} />
+                  <Box sx={{ visibility: isEdit ? "hidden" : "visible" }}>
+                    <Radio checked={_.isEqual(currentParty, party)} />
+                  </Box>
                 </ListItemIcon>
+
                 <ListItemText>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                     {party.map((name) => (
