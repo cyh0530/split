@@ -3,6 +3,7 @@ import { Receipt } from "../models/receipt";
 import { ReceiptItem } from "../models/receiptItem";
 import { SplitCheck } from "../models/splitCheck";
 import { round } from "./round";
+import { calculateItemSubTotal, calculateReceiptSubTotal } from "./calculate";
 
 function createNote(buyer: string, allBuyers: string[]) {
   const allBuyersCopy = _.cloneDeep(allBuyers)
@@ -40,13 +41,13 @@ export function calculateSplitCheck(
   });
 
   const result: SplitCheck[] = [];
-  const receiptSubTotal = calculateSubTotal(receipt.items);
+  const receiptSubTotal = calculateReceiptSubTotal(receipt);
   const receiptTip = receipt.tip;
   const receiptTax = receipt.tax;
   const tipRate = receiptTip / receiptSubTotal;
   const taxRate = receiptTax / receiptSubTotal;
   Object.entries(nameToItemsMap).forEach(([name, items]) => {
-    const buyerSubTotal = calculateSubTotal(items);
+    const buyerSubTotal = calculateItemSubTotal(items);
     const buyerTip = round(buyerSubTotal * tipRate);
     const buyerTax = round(buyerSubTotal * taxRate);
     const buyerTotal = round(buyerSubTotal + buyerTip + buyerTax);
@@ -64,12 +65,4 @@ export function calculateSplitCheck(
   result.sort((a, b) => a.name.localeCompare(b.name));
 
   return result;
-}
-
-function calculateSubTotal(items: ReceiptItem[]): number {
-  let total = 0;
-  items.forEach((item) => {
-    total += item.totalPrice;
-  });
-  return round(total);
 }

@@ -1,5 +1,4 @@
 import { SplitCheck } from "../../models/splitCheck";
-import { fakeReceiptItems } from "./receiptItem";
 
 export const fakeSplitCheckResults: SplitCheck[] = [
   {

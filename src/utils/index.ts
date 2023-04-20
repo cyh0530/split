@@ -4,6 +4,7 @@ export { generateId } from "./generateId";
 export { setPartyToLocalStorage } from "./setPartyToLocalStorage";
 export { calculateSplitCheck } from "./calculateSplitCheck";
 export {
+  calculateItemSubTotal,
   calculateReceiptTotal,
   calculateReceiptSubTotal,
-} from "./calculateReceiptSummary";
+} from "./calculate";

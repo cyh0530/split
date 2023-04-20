@@ -71,7 +71,7 @@ export function ScanSelectParty({
     } else {
       setDisableNextStep(false)
     }
-  }, [isEdit, currentParty])
+  }, [isEdit, currentParty, setDisableNextStep])
 
   return (
     <ScanContainer
