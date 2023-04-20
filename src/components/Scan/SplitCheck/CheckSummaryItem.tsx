@@ -36,7 +36,8 @@ export function CheckSummaryItem({
     updateItem(summaryType, parseFloat(newValue));
   };
 
-  const summaryPercentage = round((value / subTotal) * 100)
+  // zero if it's NaN
+  const summaryPercentage = round((value / subTotal) * 100) || 0;
 
   return (
     <ListItem dense>
