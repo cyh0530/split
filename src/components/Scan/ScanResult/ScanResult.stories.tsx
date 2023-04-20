@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ScanResult } from "./ScanResult";
-import { splitCheckResults } from "../../../stories/fakes/splitResult";
+import { fakeSplitCheckResults } from "../../../stories/fakes";
 import { Box } from "@mui/material";
 
 export default {
@@ -26,6 +26,6 @@ type Story = StoryObj<typeof ScanResult>;
 
 export const Primary: Story = {
   args: {
-    splitCheck: splitCheckResults,
+    splitCheck: fakeSplitCheckResults,
   },
 };

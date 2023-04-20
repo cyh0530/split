@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Paper } from "@mui/material";
 import { ScanAddParty } from "./ScanAddParty";
 import { localStoragePartyKey } from "../../../constants";
-import { storybookParties } from "../../../stories/fakes/parties";
+import { fakeParties } from "../../../stories/fakes";
 
 export default {
   title: "Scan Receipt/2 - Add Party",
@@ -12,7 +12,7 @@ export default {
     (Story, context) => {
       localStorage.setItem(
         localStoragePartyKey,
-        JSON.stringify(storybookParties)
+        JSON.stringify(fakeParties)
       );
       const [open, setOpen] = useState(true);
       const [newParty, setNewParty] = useState<string[]>(["me"]);

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ScanResultItem } from "./ScanResultItem";
-import { splitCheckResults } from "../../../stories/fakes/splitResult";
+import { fakeSplitCheckResults } from "../../../stories/fakes";
 
 export default {
     title: "Scan Receipt/4 - Result Item",
@@ -11,6 +11,6 @@ type Story = StoryObj<typeof ScanResultItem>;
 
 export const Primary: Story = {
     args: {
-        buyer: splitCheckResults[0]
+        buyer: fakeSplitCheckResults[0]
     }
 }

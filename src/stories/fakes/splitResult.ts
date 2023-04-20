@@ -1,10 +1,10 @@
 import { SplitCheck } from "../../models/splitCheck";
-import { receiptItems } from "./receiptItem";
+import { fakeReceiptItems } from "./receiptItem";
 
-export const splitCheckResults: SplitCheck[] = [
+export const fakeSplitCheckResults: SplitCheck[] = [
     {
         name: "Albert",
-        items: receiptItems,
+        items: fakeReceiptItems,
         tax: 1,
         tip: 1,
         subTotalPrice: 10,
@@ -12,7 +12,7 @@ export const splitCheckResults: SplitCheck[] = [
     },
     {
         name: "Bob",
-        items: receiptItems,
+        items: fakeReceiptItems,
         tax: 1,
         tip: 1,
         subTotalPrice: 10,

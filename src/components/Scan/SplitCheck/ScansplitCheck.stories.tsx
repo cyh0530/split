@@ -2,8 +2,8 @@ import { Meta, StoryObj } from "@storybook/react";
 import { ScanSplitCheck } from "./ScanSplitCheck";
 import { useState } from "react";
 import { Receipt } from "../../../models/receipt";
-import { storybookParties } from "../../../stories/fakes/parties";
-import { receipt } from "../../../stories/fakes/receipt";
+import { fakeParties } from "../../../stories/fakes";
+import { fakeReceipt } from "../../../stories/fakes";
 import { Box } from "@mui/material";
 
 export default {
@@ -11,7 +11,7 @@ export default {
   component: ScanSplitCheck,
   decorators: [
     (Story, context) => {
-      const [receiptState, setReceiptState] = useState<Receipt>(receipt);
+      const [receiptState, setReceiptState] = useState<Receipt>(fakeReceipt);
       context.args.receipt = receiptState;
       context.args.setReceipt = setReceiptState;
       return (
@@ -33,6 +33,6 @@ type Story = StoryObj<typeof ScanSplitCheck>;
 
 export const Primary: Story = {
   args: {
-    party: storybookParties[0],
+    party: fakeParties[0],
   },
 };

@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Scan } from "./Scan";
 import { Box } from "@mui/material";
+import { Scan } from "./Scan";
 
 export default {
   title: "Scan Receipt/Scan",
