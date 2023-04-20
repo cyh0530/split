@@ -28,7 +28,7 @@ export function ScanResultItem({ buyer }: ScanResultItemProps) {
         <ListItemIcon>{open ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
         <ListItemText
           primary={buyer.name}
-          secondary={`Tax: ${buyer.tax}, Tip: ${buyer.tip}`}
+          secondary={`Subtotal: ${buyer.subTotalPrice}, Tax: ${buyer.tax}, Tip: ${buyer.tip}`}
         />
         <Typography>${buyer.totalPrice}</Typography>
       </ListItemButton>

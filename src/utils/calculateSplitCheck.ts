@@ -71,5 +71,5 @@ function calculateSubTotal(items: ReceiptItem[]): number {
   items.forEach((item) => {
     total += item.totalPrice;
   });
-  return total;
+  return round(total);
 }
