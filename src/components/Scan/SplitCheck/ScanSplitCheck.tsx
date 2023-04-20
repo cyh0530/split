@@ -19,6 +19,7 @@ import {
   calculateReceiptTotal,
   calculateReceiptSubTotal,
   generateId,
+  round,
 } from "../../../utils";
 import { ScanContainer } from "../ScanContainer";
 
@@ -61,7 +62,7 @@ export function ScanSplitCheck({
       id: generateId(),
       name: "",
       unitPrice: 0,
-      quantity: 0,
+      quantity: 1,
       totalPrice: 0,
       buyers: [],
     });
@@ -97,7 +98,7 @@ export function ScanSplitCheck({
       }
     }
 
-    var totalPrice = parseFloat((newQuantity * newUnitPrice).toFixed(2));
+    var totalPrice = round(newQuantity * newUnitPrice);
     nextReceipt.items[itemIndex].totalPrice = totalPrice;
     updateReceipt(nextReceipt);
   };
