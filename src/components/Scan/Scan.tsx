@@ -7,7 +7,9 @@ import { ScanResult } from "./ScanResult/ScanResult";
 import { SplitCheck } from "../../models/splitCheck";
 import { Receipt } from "../../models/receipt";
 import { calculateSplitCheck } from "../../utils/calculateSplitCheck";
-import { Box, Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
+import { fakeInitialReceipt } from "../../stories/fakes";
+import _ from "lodash";
 
 const steps = [
   "Upload Receipt",
@@ -19,17 +21,25 @@ const steps = [
 export function Scan() {
   const [currentStep, setCurrentStep] = useState(0);
   const [file, setFile] = useState<File | null>(null);
-  const [receipt, setReceipt] = useState<Receipt>({
-    items: [],
-    subTotal: 0,
-    tip: 0,
-    tax: 0,
-    totalPrice: 0,
-  });
+  const [receipt, setReceipt] = useState<Receipt>(fakeInitialReceipt);
   const [party, setCurrentParty] = useState<string[]>([]);
   const [splitCheck, setSplitCheck] = useState<SplitCheck[]>([]);
 
   useEffect(() => {
+    // reset receipt buyers
+    const nextReceipt = _.cloneDeep(receipt);
+    nextReceipt.items.forEach(item => {
+      const quantity = item.quantity;
+      const newBuyers = []
+      for(let i = 0; i < quantity; i += 1) {
+        newBuyers.push([])
+      }
+      item.buyers = newBuyers
+    })
+    setReceipt(nextReceipt);
+  }, [party])
+
+  useEffect(() => {  
     const newSplitCheck = calculateSplitCheck(party, receipt);
     setSplitCheck(newSplitCheck);
   }, [party, receipt]);
