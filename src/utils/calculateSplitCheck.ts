@@ -1,7 +1,15 @@
+import _ from "lodash";
 import { Receipt } from "../models/receipt";
 import { ReceiptItem } from "../models/receiptItem";
 import { SplitCheck } from "../models/splitCheck";
 import { round } from "./round";
+
+function createNote(buyer: string, allBuyers: string[]) {
+  const allBuyersCopy = _.cloneDeep(allBuyers)
+  const buyerIndex = allBuyersCopy.indexOf(buyer)
+  allBuyersCopy.splice(buyerIndex, 1)
+  return `Shared with ${allBuyersCopy.join(", ")}`
+}
 
 export function calculateSplitCheck(
   party: string[],
@@ -16,7 +24,7 @@ export function calculateSplitCheck(
       unitBuyers.forEach((buyerName) => {
         const quantity = round(1 / unitBuyers.length);
         const totalPrice = round(item.unitPrice * quantity);
-        const note = `Shared with ${unitBuyers.join(", ")}`;
+        const note = createNote(buyerName, unitBuyers)
         const buyerItem: ReceiptItem = {
           id: item.id,
           name: item.name,

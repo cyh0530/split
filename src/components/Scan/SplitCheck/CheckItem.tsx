@@ -2,7 +2,6 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import {
   Box,
   Chip,
-  Collapse,
   Divider,
   IconButton,
   List,
@@ -92,7 +91,7 @@ export function CheckItem({
       setQuantityError(false);
     }
 
-    if (!!newItemName && !!newUnitPriceStr && !!newQuantityStr) {
+    if (!valueError && !!newItemName && !!newUnitPriceStr && !!newQuantityStr) {
       const newUnitPrice = parseFloat(newUnitPriceStr);
       const newQuantity = parseFloat(newQuantityStr);
       var totalPrice = parseFloat((newUnitPrice * newQuantity).toFixed(2));

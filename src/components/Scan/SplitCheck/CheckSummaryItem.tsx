@@ -59,7 +59,7 @@ export function CheckSummaryItem({
                 helperText={valueError && "Please enter a valid number"}
                 onChange={handleItemChange}
                 variant="standard"
-                sx={{ width: 50 }}
+                sx={{ width: 85 }}
               />
             </Box>
           ) : (

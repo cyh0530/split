@@ -19,7 +19,6 @@ export function ScanSteps({
   const theme = useTheme();
   return (
     <Paper
-      elevation={3}
       sx={({ breakpoints }) => ({
         position: "fixed",
         bottom: 0,
