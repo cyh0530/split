@@ -112,7 +112,7 @@ export function ScanSelectParty({
                 <ListItemText>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                     {party.map((name) => (
-                      <Chip size="small" key={name} label={name} />
+                      <Chip key={name} label={name} />
                     ))}
                   </Box>
                 </ListItemText>
