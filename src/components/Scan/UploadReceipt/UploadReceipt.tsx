@@ -13,7 +13,9 @@ export function UploadReceipt({
   setFile,
   setDisableNextStep,
 }: UploadReceiptProps) {
-  const [image, setImage] = useState<string>(file ? URL.createObjectURL(file) : "");
+  const [image, setImage] = useState<string>(
+    file ? URL.createObjectURL(file) : ""
+  );
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -30,30 +32,30 @@ export function UploadReceipt({
     <ScanContainer title="Upload Receipt">
       <Box
         sx={{
-          textAlign: "center",
-          display: "flex",
-          alignContent: "space-around",
-          justifyContent: "space-around",
-          flexDirection: "column",
-          gap: 2,
+          pt: 2,
+          px: 1,
         }}
       >
-        <Box>
-          <Button variant="contained" component="label">
-            {image === "" ? "Upload Receipt" : "Replace Receipt"}
-            <input
-              hidden
-              accept="image/*"
-              type="file"
-              onChange={handleOnChange}
-            />
-          </Button>
-        </Box>
-        {image !== "" && (
-          <Paper sx={{ width: "100%" }} elevation={3}>
-            <img src={image} alt="receipt" width="100%" />
-          </Paper>
-        )}
+        {image !== "" && <img src={image} alt="receipt" width="100%" />}
+      </Box>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 70,
+          left: "50%",
+          translate: "-50%",
+          textAlign: "center",
+        }}
+      >
+        <Button component="label" variant="contained">
+          {image === "" ? "Upload Receipt" : "Replace Receipt"}
+          <input
+            hidden
+            accept="image/*"
+            type="file"
+            onChange={handleOnChange}
+          />
+        </Button>
       </Box>
     </ScanContainer>
   );

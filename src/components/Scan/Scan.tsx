@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Alert, Container, Snackbar } from "@mui/material";
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Container,
+  Modal,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import _ from "lodash";
 import { ScanSteps } from "./ScanSteps";
 import { UploadReceipt } from "./UploadReceipt/UploadReceipt";
@@ -12,6 +20,7 @@ import { calculateSplitCheck } from "../../utils/calculateSplitCheck";
 import { fakeInitialReceipt } from "../../stories/fakes";
 import { uploadReceipt } from "../../api/uploadReceipt";
 import { SnackbarContent } from "../../models/snackbar";
+import { CenterModal } from "../CenterModal";
 
 const steps = [
   "Upload Receipt",
@@ -34,6 +43,8 @@ export function Scan() {
     severity: "error",
     message: "",
   });
+
+  const [isUploadingReceipt, setIsUploadingReceipt] = useState(false);
 
   useEffect(() => {
     // reset receipt buyers
@@ -67,20 +78,23 @@ export function Scan() {
       setSnackbar({
         open: true,
         severity: "error",
-        message: "No receipt uploaded. Please upload a receipt."
+        message: "No receipt uploaded. Please upload a receipt.",
       });
       return false;
     }
+    setIsUploadingReceipt(true);
     const receiptResult = await uploadReceipt(file);
     if (!receiptResult) {
       setSnackbar({
         open: true,
         severity: "error",
-        message: "Failed to parse receipt. Please try again."
-      })
+        message: "Failed to parse receipt. Please try again.",
+      });
+      setIsUploadingReceipt(false);
       return false;
     }
     setReceipt(receiptResult);
+    setIsUploadingReceipt(false);
     return true;
   };
 
@@ -128,9 +142,18 @@ export function Scan() {
             open: false,
           });
         }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
+      <CenterModal open={isUploadingReceipt}>
+        <Box sx={{ textAlign: "center" }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Uploading and parsing receipt...
+          </Typography>
+          <CircularProgress />
+        </Box>
+      </CenterModal>
     </Container>
   );
 }
