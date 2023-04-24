@@ -2,17 +2,17 @@ import { Box, Button, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ScanContainer } from "../ScanContainer";
 
-interface ScanReceiptProps {
+interface UploadReceiptProps {
   file: File | null;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
   setDisableNextStep: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ScanReceipt({
+export function UploadReceipt({
   file,
   setFile,
   setDisableNextStep,
-}: ScanReceiptProps) {
+}: UploadReceiptProps) {
   const [image, setImage] = useState<string>(file ? URL.createObjectURL(file) : "");
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {

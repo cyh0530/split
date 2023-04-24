@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ScanSteps } from "./ScanSteps";
-import { ScanReceipt } from "./ScanReceipt/ScanReceipt";
+import { UploadReceipt } from "./UploadReceipt/UploadReceipt";
 import { ScanSelectParty } from "./SelectParty";
 import { ScanSplitCheck } from "./SplitCheck";
 import { ScanResult } from "./ScanResult/ScanResult";
@@ -55,7 +55,7 @@ export function Scan() {
   return (
     <Container maxWidth="sm" disableGutters>
       {currentStep === 0 && (
-        <ScanReceipt
+        <UploadReceipt
           file={file}
           setFile={setFile}
           setDisableNextStep={setDisableNextStep}

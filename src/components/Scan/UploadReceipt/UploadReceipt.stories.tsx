@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { ScanReceipt } from "./ScanReceipt";
+import { UploadReceipt } from "./UploadReceipt";
 import { useState } from "react";
 
 export default {
-  title: "Scan Receipt/1 - Scan Receipt",
-  component: ScanReceipt,
+  title: "Scan Receipt/1 - Upload Receipt",
+  component: UploadReceipt,
   decorators: [
     (Story, context) => {
       const [file, setFile] = useState<File | null>(null);
@@ -13,8 +13,8 @@ export default {
       return <Story />
     },
   ],
-} as Meta<typeof ScanReceipt>;
+} as Meta<typeof UploadReceipt>;
 
-type Story = StoryObj<typeof ScanReceipt>;
+type Story = StoryObj<typeof UploadReceipt>;
 
 export const Default: Story = {};
