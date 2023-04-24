@@ -36,7 +36,7 @@ export function ScanSteps({
         sx={{
           height: 50,
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: currentStep === 0 ? "flex-end" : "space-between",
           alignContent: "center",
           alignItems: "center",
           justifyItems: "center",
