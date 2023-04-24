@@ -15,7 +15,7 @@ import { ScanSelectParty } from "./SelectParty";
 import { ScanSplitCheck } from "./SplitCheck";
 import { ScanResult } from "./ScanResult/ScanResult";
 import { SplitCheck } from "../../models/splitCheck";
-import { Receipt } from "../../models/receipt";
+import { Receipt, emptyReceipt } from "../../models/receipt";
 import { calculateSplitCheck } from "../../utils/calculateSplitCheck";
 import { fakeInitialReceipt } from "../../stories/fakes";
 import { uploadReceipt } from "../../api/uploadReceipt";
@@ -34,7 +34,7 @@ export function Scan() {
   const [disableNextStep, setDisableNextStep] = useState(false);
   const [disablePrevStep, setDisablePrevStep] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [receipt, setReceipt] = useState<Receipt>(fakeInitialReceipt);
+  const [receipt, setReceipt] = useState<Receipt>(emptyReceipt);
   const [party, setCurrentParty] = useState<string[]>([]);
   const [splitCheck, setSplitCheck] = useState<SplitCheck[]>([]);
 
@@ -66,12 +66,28 @@ export function Scan() {
   }, [party, receipt]);
 
   const goToNextStep = async () => {
+    if (currentStep === steps.length - 1) {
+      reset();
+      return;
+    }
     if (currentStep === 0 && !(await sendReceipt())) {
       return;
     }
     setCurrentStep(currentStep + 1);
-    setDisableNextStep(true);
+    if (currentStep + 1 !== steps.length - 1) {
+      setDisableNextStep(true);
+    }
   };
+
+  const reset = () => {
+    setCurrentStep(0)
+    setDisableNextStep(false)
+    setDisablePrevStep(false)
+    setFile(null)
+    setReceipt(emptyReceipt)
+    setCurrentParty([])
+    setSplitCheck([])
+  }
 
   const sendReceipt = async (): Promise<boolean> => {
     if (!file) {

@@ -1,5 +1,9 @@
 import { useTheme } from "@mui/material/styles";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import {
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  RestartAlt,
+} from "@mui/icons-material";
 import { Button, Paper, Box, Typography } from "@mui/material";
 import React from "react";
 
@@ -57,20 +61,27 @@ export function ScanSteps({
           </Button>
         )}
 
-        {currentStep !== maxStep - 1 && (
-          <Button
-            sx={{ height: "100%" }}
-            onClick={handleNext}
-            disabled={disableNextStep}
-          >
-            Next
-            {theme.direction === "rtl" ? (
-              <KeyboardArrowLeft />
-            ) : (
-              <KeyboardArrowRight />
-            )}
-          </Button>
-        )}
+        <Button
+          sx={{ height: "100%" }}
+          onClick={handleNext}
+          disabled={disableNextStep}
+        >
+          {currentStep !== maxStep - 1 ? (
+            <>
+              Next
+              {theme.direction === "rtl" ? (
+                <KeyboardArrowLeft />
+              ) : (
+                <KeyboardArrowRight />
+              )}
+            </>
+          ) : (
+            <>
+              <RestartAlt />
+              Restart
+            </>
+          )}
+        </Button>
       </Box>
       {/* <MobileStepper
         sx={({ breakpoints }) => ({
