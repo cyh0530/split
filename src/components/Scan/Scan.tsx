@@ -4,7 +4,6 @@ import {
   Box,
   CircularProgress,
   Container,
-  Modal,
   Snackbar,
   Typography,
 } from "@mui/material";
@@ -17,7 +16,6 @@ import { ScanResult } from "./ScanResult/ScanResult";
 import { SplitCheck } from "../../models/splitCheck";
 import { Receipt, emptyReceipt } from "../../models/receipt";
 import { calculateSplitCheck } from "../../utils/calculateSplitCheck";
-import { fakeInitialReceipt } from "../../stories/fakes";
 import { uploadReceipt } from "../../api/uploadReceipt";
 import { SnackbarContent } from "../../models/snackbar";
 import { CenterModal } from "../CenterModal";
@@ -31,8 +29,8 @@ const steps = [
 
 export function Scan() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [disableNextStep, setDisableNextStep] = useState(false);
-  const [disablePrevStep, setDisablePrevStep] = useState(false);
+  const [disableNextStep, setDisableNextStep] = useState(true);
+  const [disablePrevStep, setDisablePrevStep] = useState(true);
   const [file, setFile] = useState<File | null>(null);
   const [receipt, setReceipt] = useState<Receipt>(emptyReceipt);
   const [party, setCurrentParty] = useState<string[]>([]);
@@ -81,8 +79,8 @@ export function Scan() {
 
   const reset = () => {
     setCurrentStep(0)
-    setDisableNextStep(false)
-    setDisablePrevStep(false)
+    setDisableNextStep(true)
+    setDisablePrevStep(true)
     setFile(null)
     setReceipt(emptyReceipt)
     setCurrentParty([])
@@ -165,7 +163,7 @@ export function Scan() {
       <CenterModal open={isUploadingReceipt}>
         <Box sx={{ textAlign: "center" }}>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            Uploading and parsing receipt...
+            Parsing receipt...
           </Typography>
           <CircularProgress />
         </Box>

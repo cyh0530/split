@@ -4,7 +4,7 @@ import {
   KeyboardArrowRight,
   RestartAlt,
 } from "@mui/icons-material";
-import { Button, Paper, Box, Typography } from "@mui/material";
+import { Button, Paper, Box } from "@mui/material";
 import React from "react";
 
 interface ScanStepsProps {
@@ -27,6 +27,7 @@ export function ScanSteps({
   const theme = useTheme();
   return (
     <Paper
+      elevation={2}
       sx={({ breakpoints }) => ({
         position: "fixed",
         bottom: 0,

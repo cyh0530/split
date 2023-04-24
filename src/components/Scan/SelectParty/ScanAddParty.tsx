@@ -9,7 +9,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Modal,
   Snackbar,
   TextField,
   Typography,

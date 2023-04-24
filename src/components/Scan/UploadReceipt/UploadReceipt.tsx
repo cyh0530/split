@@ -1,5 +1,5 @@
-import { Box, Button, Paper } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Button } from "@mui/material";
+import { useState } from "react";
 import { ScanContainer } from "../ScanContainer";
 
 interface UploadReceiptProps {
@@ -32,7 +32,7 @@ export function UploadReceipt({
     <ScanContainer title="Upload Receipt">
       <Box
         sx={{
-          pt: 2,
+          py: 2,
           px: 1,
         }}
       >
