@@ -20,9 +20,9 @@ export function UploadReceipt({
       const file = e.target.files[0];
       setFile(file);
       setImage(URL.createObjectURL(file));
-      setDisableNextStep(true);
-    } else {
       setDisableNextStep(false);
+    } else {
+      setDisableNextStep(true);
     }
   };
 
