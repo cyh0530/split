@@ -124,7 +124,7 @@ function Manual() {
     ]);
 
     return (
-        <div>
+        <Box sx={{px: 2}}>
             <Typography variant="h5" align="center" sx={{ margin: "10px 0" }}>
                 How Much Should I Pay
             </Typography>
@@ -288,7 +288,7 @@ function Manual() {
                 </Typography>
                 <div style={{height: "20px"}}></div>
             </Box>
-        </div>
+        </Box>
     );
 }
 

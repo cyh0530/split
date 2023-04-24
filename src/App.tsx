@@ -1,7 +1,6 @@
 import ReactGA from "react-ga";
-import Manual from "./Manual";
-import { Scan } from "./components/Scan";
 import CustomTheme from "./theme/createTheme";
+import { Router } from "./router";
 
 ReactGA.initialize("G-7RV8JZXMCF");
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -9,7 +8,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 function App() {
   return (
     <CustomTheme>
-      <Scan />
+      <Router />
     </CustomTheme>
   );
 }
