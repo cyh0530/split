@@ -1,9 +1,8 @@
-import { env } from "process";
 import { Scan } from "./generated/Scan";
 import { ApiError } from "./ApiError";
 
 export const ScanApi = new Scan({
-    baseUrl: "http://localhost:7071",
+    baseUrl: process.env.REACT_APP_API_URL,
     customFetch: async (input, init) => {
         const response = await fetch(input, init)
 
