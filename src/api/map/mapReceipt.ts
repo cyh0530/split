@@ -1,15 +1,15 @@
 import { Receipt } from "../../models";
 import { ReceiptResult } from "../generated/data-contracts";
-import { generateId } from "../../utils";
+import { calculateReceiptSubTotal, calculateReceiptTotal, generateId, round } from "../../utils";
 
 export function mapReceipt(receiptResponse: ReceiptResult): Receipt {
-    return {
+    const receipt: Receipt = {
         items: receiptResponse.items.map(item => ({
             id: generateId(),
             name: item.name,
             quantity: item.quantity,
             unitPrice: item.unit_price,
-            totalPrice: item.total_price,
+            totalPrice: round(item.quantity * item.unit_price),
             buyers: Array.from({length: item.quantity}, () => [])
         })),
         subTotal: receiptResponse.subtotal,
@@ -17,4 +17,7 @@ export function mapReceipt(receiptResponse: ReceiptResult): Receipt {
         tax: receiptResponse.tax,
         totalPrice: receiptResponse.total
     }
+    receipt.subTotal = calculateReceiptSubTotal(receipt)
+    receipt.totalPrice = calculateReceiptTotal(receipt)
+    return receipt
 }
