@@ -107,6 +107,11 @@ export function Scan() {
       setIsUploadingReceipt(false);
       return false;
     }
+    setSnackbar({
+      open: true,
+      severity: "success",
+      message: "Receipt parsed!",
+    });
     setReceipt(receiptResult);
     setIsUploadingReceipt(false);
     return true;
