@@ -19,6 +19,8 @@ import { calculateSplitCheck } from "../../utils/calculateSplitCheck";
 import { uploadReceipt } from "../../api/uploadReceipt";
 import { SnackbarContent } from "../../models/snackbar";
 import { CenterModal } from "../CenterModal";
+import { healthCheck } from "../../api/healthCheck";
+import { Link } from "react-router-dom";
 
 const steps = [
   "Upload Receipt",
@@ -43,6 +45,7 @@ export function Scan() {
   });
 
   const [isUploadingReceipt, setIsUploadingReceipt] = useState(false);
+  const [isUnhealthy, setIsUnhealthy] = useState(false);
 
   useEffect(() => {
     // reset receipt buyers
@@ -78,14 +81,14 @@ export function Scan() {
   };
 
   const reset = () => {
-    setCurrentStep(0)
-    setDisableNextStep(true)
-    setDisablePrevStep(true)
-    setFile(null)
-    setReceipt(emptyReceipt)
-    setCurrentParty([])
-    setSplitCheck([])
-  }
+    setCurrentStep(0);
+    setDisableNextStep(true);
+    setDisablePrevStep(true);
+    setFile(null);
+    setReceipt(emptyReceipt);
+    setCurrentParty([]);
+    setSplitCheck([]);
+  };
 
   const sendReceipt = async (): Promise<boolean> => {
     if (!file) {
@@ -116,6 +119,16 @@ export function Scan() {
     setIsUploadingReceipt(false);
     return true;
   };
+
+  useEffect(() => {
+    const callHeatlhCheck = async () => {
+      const healthy = await healthCheck();
+      if (!healthy) {
+        setIsUnhealthy(true)
+      }
+    };
+    callHeatlhCheck();
+  });
 
   const goToPrevStep = () => setCurrentStep(currentStep - 1);
   return (
@@ -171,6 +184,16 @@ export function Scan() {
             Parsing receipt...
           </Typography>
           <CircularProgress />
+        </Box>
+      </CenterModal>
+      <CenterModal open={isUnhealthy}>
+        <Box sx={{ textAlign: "center" }}>
+          <Typography variant="h6">
+            Sorry, the service is not available
+          </Typography>
+          <Typography variant="body1">
+            Please use <Link to="/manual">this page</Link> to split the check
+          </Typography>
         </Box>
       </CenterModal>
     </Container>
