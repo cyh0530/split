@@ -115,8 +115,8 @@ export function ScanAddParty({
       <CenterModal open={open}>
         <Box
           sx={{
-            maxHeight: "600px",
-            height: "100%",
+            height: "600px",
+            maxHeight: "100%",
           }}
         >
           <Box

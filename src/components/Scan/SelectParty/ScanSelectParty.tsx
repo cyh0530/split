@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Radio,
+  Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
@@ -40,7 +41,7 @@ const indexOfParty = (parties: string[][], party: string[]) => {
 export function ScanSelectParty({
   currentParty,
   setCurrentParty,
-  setDisableNextStep
+  setDisableNextStep,
 }: ScanSelectPartyProps) {
   const [, setLocalStorageParty] = usePartyLocalStorage();
   const [openAddPartyModal, setOpenAddPartyModal] = useState(false);
@@ -67,11 +68,11 @@ export function ScanSelectParty({
 
   useEffect(() => {
     if (isEdit || currentParty.length === 0) {
-      setDisableNextStep(true)
+      setDisableNextStep(true);
     } else {
-      setDisableNextStep(false)
+      setDisableNextStep(false);
     }
-  }, [isEdit, currentParty, setDisableNextStep])
+  }, [isEdit, currentParty, setDisableNextStep]);
 
   return (
     <ScanContainer
@@ -82,6 +83,16 @@ export function ScanSelectParty({
         </IconButton>
       }
     >
+      {localStorageParty.length === 0 && (
+        <>
+          <Typography sx={{ mt: 1 }} variant="body1" textAlign="center">
+            Select who is splitting the receipt with you
+          </Typography>
+          <Typography variant="body1" textAlign="center">
+            Click "Add Names" to add people
+          </Typography>
+        </>
+      )}
       <List dense disablePadding sx={{ paddingBottom: 12 }}>
         {localStorageParty.map((party) => (
           <Fragment key={party.join("-")}>

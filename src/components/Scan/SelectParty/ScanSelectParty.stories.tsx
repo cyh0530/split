@@ -14,8 +14,11 @@ export default {
         JSON.stringify(fakeParties)
       );
       const [currentParty, setCurrentParty] = useState<string[]>([]);
+      const [, setDisableNextStep] = useState(true);
+
       context.args.currentParty = currentParty;
       context.args.setCurrentParty = setCurrentParty;
+      context.args.setDisableNextStep = setDisableNextStep;
       return <Story />;
     },
   ],
