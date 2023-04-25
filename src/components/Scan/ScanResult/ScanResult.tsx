@@ -16,7 +16,6 @@ interface ScanResultProps {
   splitCheck: SplitCheck[];
 }
 
-const buyMeCoffeeButtonHeightRatio = 60/217
 export function ScanResult({ splitCheck }: ScanResultProps) {
   let total = 0;
   splitCheck.forEach((check) => {
@@ -38,7 +37,7 @@ export function ScanResult({ splitCheck }: ScanResultProps) {
         </ListItem>
       </List>
       <Box sx={{ my: 2, textAlign: "center", width: "100%" }}>
-        <a href="https://www.buymeacoffee.com/cyh0530" target="_blank">
+        <a href="https://www.buymeacoffee.com/cyh0530" target="_blank" rel="noreferrer">
           <img
             src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
             alt="Buy Me A Coffee"
