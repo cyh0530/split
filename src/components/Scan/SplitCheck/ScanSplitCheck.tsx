@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -36,29 +36,24 @@ export function ScanSplitCheck({
   receipt,
   setReceipt,
   setDisableNextStep,
-  setDisablePrevStep
+  setDisablePrevStep,
 }: ScanSplitCheckProps) {
   const [isEdit, setIsEdit] = useState(false);
   const [disableFinishEditBtn, setDisableFinishEditBtn] = useState(false);
   const [editingReceipt, setEditingReceipt] = useState<Receipt>(receipt);
 
   useEffect(() => {
-    // auto correct sub total and total
-    updateReceipt(receipt);
-  }, [])
-
-  useEffect(() => {
     let someItemNotSelected = false;
-    receipt.items.forEach(item => {
-      item.buyers.forEach(unitBuyers => {
+    receipt.items.forEach((item) => {
+      item.buyers.forEach((unitBuyers) => {
         if (unitBuyers.length === 0) {
           someItemNotSelected = true;
         }
-      })
-    })
-    setDisableNextStep(isEdit || someItemNotSelected)
-    setDisablePrevStep(isEdit)
-  }, [isEdit, receipt])
+      });
+    });
+    setDisableNextStep(isEdit || someItemNotSelected);
+    setDisablePrevStep(isEdit);
+  }, [isEdit, receipt, setDisableNextStep, setDisablePrevStep]);
 
   const handleAddBuyerNameToItem = (
     item: ReceiptItem,
@@ -135,16 +130,7 @@ export function ScanSplitCheck({
     updateReceipt(nextReceipt);
   };
 
-  const updateReceipt = (nextReceipt: Receipt) => {
-    const calculateSubTotal = calculateReceiptSubTotal(nextReceipt);
-    const calculatedTotal = calculateReceiptTotal(nextReceipt);
-    nextReceipt.subTotal = calculateSubTotal;
-    nextReceipt.totalPrice = calculatedTotal;
-    setEditingReceipt(nextReceipt);
-    checkReceiptValidity(nextReceipt);
-  };
-
-  const checkReceiptValidity = (receipt: Receipt) => {
+  const checkReceiptValidity = useCallback((receipt: Receipt) => {
     let disableFinishBtn = false;
     receipt.items.forEach((item) => {
       if (
@@ -159,7 +145,22 @@ export function ScanSplitCheck({
       disableFinishBtn = true;
     }
     setDisableFinishEditBtn(disableFinishBtn);
-  };
+  }, [setDisableFinishEditBtn]);
+
+  const updateReceipt = useCallback((nextReceipt: Receipt) => {
+    const calculateSubTotal = calculateReceiptSubTotal(nextReceipt);
+    const calculatedTotal = calculateReceiptTotal(nextReceipt);
+    nextReceipt.subTotal = calculateSubTotal;
+    nextReceipt.totalPrice = calculatedTotal;
+    setEditingReceipt(nextReceipt);
+    checkReceiptValidity(nextReceipt);
+  }, [setEditingReceipt, checkReceiptValidity]);
+
+
+  useEffect(() => {
+    // auto correct sub total and total
+    updateReceipt(receipt);
+  }, [updateReceipt, receipt]);
 
   const onFinishEditing = () => {
     setReceipt(editingReceipt);

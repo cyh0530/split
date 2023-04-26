@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -47,8 +47,7 @@ export function Scan() {
   const [isUploadingReceipt, setIsUploadingReceipt] = useState(false);
   const [isUnhealthy, setIsUnhealthy] = useState(false);
 
-  useEffect(() => {
-    // reset receipt buyers
+  const resetReceiptBuyer = useCallback(() => {
     const nextReceipt = _.cloneDeep(receipt);
     nextReceipt.items.forEach((item) => {
       const quantity = item.quantity;
@@ -59,7 +58,13 @@ export function Scan() {
       item.buyers = newBuyers;
     });
     setReceipt(nextReceipt);
-  }, [party]);
+  }, [receipt, setReceipt]);
+
+
+  useEffect(() => {
+    // reset receipt buyers if party changes
+    resetReceiptBuyer();
+  }, [party, resetReceiptBuyer]);
 
   useEffect(() => {
     const newSplitCheck = calculateSplitCheck(party, receipt);
@@ -124,7 +129,7 @@ export function Scan() {
     const callHeatlhCheck = async () => {
       const healthy = await healthCheck();
       if (!healthy) {
-        setIsUnhealthy(true)
+        setIsUnhealthy(true);
       }
     };
     callHeatlhCheck();

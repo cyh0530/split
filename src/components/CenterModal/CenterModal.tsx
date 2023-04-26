@@ -1,4 +1,4 @@
-import { Modal, Box, ModalTypeMap, ModalProps } from "@mui/material";
+import { Modal, Box, ModalProps } from "@mui/material";
 import { ReactNode } from "react";
 
 interface CenterModalProps {
