@@ -64,7 +64,7 @@ export function Scan() {
   useEffect(() => {
     // reset receipt buyers if party changes
     resetReceiptBuyer();
-  }, [party, resetReceiptBuyer]);
+  }, [party]);
 
   useEffect(() => {
     const newSplitCheck = calculateSplitCheck(party, receipt);
@@ -125,15 +125,15 @@ export function Scan() {
     return true;
   };
 
-  useEffect(() => {
-    const callHeatlhCheck = async () => {
-      const healthy = await healthCheck();
-      if (!healthy) {
-        setIsUnhealthy(true);
-      }
-    };
-    callHeatlhCheck();
-  });
+  // useEffect(() => {
+  //   const callHeatlhCheck = async () => {
+  //     const healthy = await healthCheck();
+  //     if (!healthy) {
+  //       setIsUnhealthy(true);
+  //     }
+  //   };
+  //   callHeatlhCheck();
+  // });
 
   const goToPrevStep = () => setCurrentStep(currentStep - 1);
   return (
