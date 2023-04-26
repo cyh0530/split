@@ -32,7 +32,7 @@ const steps = [
 export function Scan() {
   const [currentStep, setCurrentStep] = useState(0);
   const [disableNextStep, setDisableNextStep] = useState(true);
-  const [disablePrevStep, setDisablePrevStep] = useState(true);
+  const [disablePrevStep, setDisablePrevStep] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [receipt, setReceipt] = useState<Receipt>(emptyReceipt);
   const [party, setCurrentParty] = useState<string[]>([]);
@@ -51,21 +51,22 @@ export function Scan() {
     const nextReceipt = _.cloneDeep(receipt);
     nextReceipt.items.forEach((item) => {
       const quantity = item.quantity;
-      const newBuyers = [];
-      for (let i = 0; i < quantity; i += 1) {
-        newBuyers.push([]);
-      }
-      item.buyers = newBuyers;
+      item.buyers = Array.from({ length: quantity }, () => []);
     });
     setReceipt(nextReceipt);
   }, [receipt, setReceipt]);
 
-
+  // reset receipt if file changes
   useEffect(() => {
-    // reset receipt buyers if party changes
+    setReceipt(emptyReceipt);
+  }, [file]);
+
+  // reset receipt buyers if party changes
+  useEffect(() => {
     resetReceiptBuyer();
   }, [party]);
 
+  // recalculate split check if receipt value changes
   useEffect(() => {
     const newSplitCheck = calculateSplitCheck(party, receipt);
     setSplitCheck(newSplitCheck);
@@ -76,7 +77,10 @@ export function Scan() {
       reset();
       return;
     }
-    if (currentStep === 0 && !(await sendReceipt())) {
+    // if no receipt data present, upload and parse the receipt
+    if (currentStep === 0 &&
+        _.isEqual(receipt, emptyReceipt) &&
+        !(await sendReceipt())) {
       return;
     }
     setCurrentStep(currentStep + 1);

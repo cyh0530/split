@@ -35,6 +35,9 @@ export function calculateSplitCheck(
           buyers: [unitBuyers],
           note: unitBuyers.length > 1 ? note : undefined,
         };
+        if (!(buyerName in nameToItemsMap)) {
+          nameToItemsMap[buyerName] = []
+        }
         nameToItemsMap[buyerName].push(buyerItem);
       });
     });

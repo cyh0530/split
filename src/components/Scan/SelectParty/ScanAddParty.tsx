@@ -70,17 +70,18 @@ export function ScanAddParty({
   };
 
   const handleAddName = () => {
+    const trimmedName = newName.trim();
     const nextAllNames = [...allNames];
-    if (nextAllNames.includes(newName)) {
+    if (nextAllNames.includes(trimmedName)) {
       setAddError(true);
       setAddHelperText("Name already exists");
       return;
     }
-    nextAllNames.push(newName);
+    nextAllNames.push(trimmedName);
     nextAllNames.sort((a, b) =>
       a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
     );
-    handleSetNewParty(newName);
+    handleSetNewParty(trimmedName);
     setAllNames(nextAllNames);
     setNewName("");
     resetAddError();

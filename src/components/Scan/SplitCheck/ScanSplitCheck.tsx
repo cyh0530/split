@@ -130,32 +130,37 @@ export function ScanSplitCheck({
     updateReceipt(nextReceipt);
   };
 
-  const checkReceiptValidity = useCallback((receipt: Receipt) => {
-    let disableFinishBtn = false;
-    receipt.items.forEach((item) => {
-      if (
-        item.name.trim().length === 0 ||
-        item.unitPrice <= 0 ||
-        item.quantity <= 0
-      ) {
+  const checkReceiptValidity = useCallback(
+    (receipt: Receipt) => {
+      let disableFinishBtn = false;
+      receipt.items.forEach((item) => {
+        if (
+          item.name.trim().length === 0 ||
+          item.unitPrice <= 0 ||
+          item.quantity <= 0
+        ) {
+          disableFinishBtn = true;
+        }
+      });
+      if (receipt.tax <= 0 || receipt.tip <= 0) {
         disableFinishBtn = true;
       }
-    });
-    if (receipt.tax <= 0 || receipt.tip <= 0) {
-      disableFinishBtn = true;
-    }
-    setDisableFinishEditBtn(disableFinishBtn);
-  }, [setDisableFinishEditBtn]);
+      setDisableFinishEditBtn(disableFinishBtn);
+    },
+    [setDisableFinishEditBtn]
+  );
 
-  const updateReceipt = useCallback((nextReceipt: Receipt) => {
-    const calculateSubTotal = calculateReceiptSubTotal(nextReceipt);
-    const calculatedTotal = calculateReceiptTotal(nextReceipt);
-    nextReceipt.subTotal = calculateSubTotal;
-    nextReceipt.totalPrice = calculatedTotal;
-    setEditingReceipt(nextReceipt);
-    checkReceiptValidity(nextReceipt);
-  }, [setEditingReceipt, checkReceiptValidity]);
-
+  const updateReceipt = useCallback(
+    (nextReceipt: Receipt) => {
+      const calculateSubTotal = calculateReceiptSubTotal(nextReceipt);
+      const calculatedTotal = calculateReceiptTotal(nextReceipt);
+      nextReceipt.subTotal = calculateSubTotal;
+      nextReceipt.totalPrice = calculatedTotal;
+      setEditingReceipt(nextReceipt);
+      checkReceiptValidity(nextReceipt);
+    },
+    [setEditingReceipt, checkReceiptValidity]
+  );
 
   useEffect(() => {
     // auto correct sub total and total
