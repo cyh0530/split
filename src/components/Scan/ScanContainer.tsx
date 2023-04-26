@@ -19,7 +19,8 @@ export function ScanContainer({
       <Box
         sx={
           {
-            height: "calc(100vh - 90px)",
+            pt: "50px",
+            pb: "70px",
             overflow: "auto",
           }
         }
