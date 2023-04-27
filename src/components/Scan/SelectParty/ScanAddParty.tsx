@@ -18,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { usePartyLocalStorage } from "../../../hooks/usePartyLocalStorage";
 import _ from "lodash";
 import { CenterModal } from "../../CenterModal";
+import { listContainsIgnoreCase } from "@/utils/listContainsIgnoreCase";
 
 interface ScanAddPartyProps {
   open: boolean;
@@ -40,6 +41,8 @@ export function ScanAddParty({
   const [addHelperText, setAddHelperText] = useState("");
   const [localStorageParty, setLocalStorageParty] = usePartyLocalStorage();
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
+  const [showAddNameSnackbar, setShowAddNameSnackbar] = useState(false);
+  const [snackbarAddedName, setSnackbarAddedName] = useState("");
 
   useEffect(() => {
     var names = localStorageParty.flat();
@@ -72,7 +75,7 @@ export function ScanAddParty({
   const handleAddName = () => {
     const trimmedName = newName.trim();
     const nextAllNames = [...allNames];
-    if (nextAllNames.includes(trimmedName)) {
+    if (listContainsIgnoreCase(nextAllNames, trimmedName)) {
       setAddError(true);
       setAddHelperText("Name already exists");
       return;
@@ -83,7 +86,9 @@ export function ScanAddParty({
     );
     handleSetNewParty(trimmedName);
     setAllNames(nextAllNames);
+    setSnackbarAddedName(newName);
     setNewName("");
+    setShowAddNameSnackbar(true);
     resetAddError();
   };
 
@@ -197,6 +202,17 @@ export function ScanAddParty({
         onClose={() => setShowSuccessSnackbar(false)}
       >
         <Alert severity="success">Added new party!</Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        autoHideDuration={2000}
+        open={showAddNameSnackbar}
+        onClose={() => setShowAddNameSnackbar(false)}
+      >
+        <Alert severity="success">Added {snackbarAddedName}</Alert>
       </Snackbar>
     </>
   );
