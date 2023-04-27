@@ -4,7 +4,7 @@ import { calculateReceiptSubTotal, calculateReceiptTotal, generateId, round } fr
 
 export function mapReceipt(receiptResponse: ReceiptResult): Receipt {
     const receipt: Receipt = {
-        items: receiptResponse.items.map(item => ({
+        items: receiptResponse.items.filter(item => item.total_price > 0).map(item => ({
             id: generateId(),
             name: item.name,
             quantity: item.quantity,
