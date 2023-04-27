@@ -46,7 +46,6 @@ export function Scan() {
 
   const [isUploadingReceipt, setIsUploadingReceipt] = useState(false);
   const [isUnhealthy, setIsUnhealthy] = useState(false);
-  const [isHealthChecking, setIsHealthChecking] = useState(true);
 
   const resetReceiptBuyer = useCallback(() => {
     const nextReceipt = _.cloneDeep(receipt);
@@ -138,7 +137,6 @@ export function Scan() {
       if (!healthy) {
         setIsUnhealthy(true);
       }
-      setIsHealthChecking(false);
     };
     callHeatlhCheck();
   }, []);
@@ -199,21 +197,14 @@ export function Scan() {
           <CircularProgress />
         </Box>
       </CenterModal>
-      <CenterModal open={isUnhealthy || isHealthChecking}>
+      <CenterModal open={isUnhealthy}>
         <Box sx={{ textAlign: "center" }}>
-          {isHealthChecking ? (
-            <CircularProgress />
-          ) : (
-            <>
-              <Typography variant="h6">
-                Sorry, the service is not available
-              </Typography>
-              <Typography variant="body1">
-                Please use <Link to="/manual">this page</Link> to split the
-                check
-              </Typography>
-            </>
-          )}
+          <Typography variant="h6">
+            Sorry, the service is not available
+          </Typography>
+          <Typography variant="body1">
+            Please use <Link to="/manual">this page</Link> to split the check
+          </Typography>
         </Box>
       </CenterModal>
     </Container>
