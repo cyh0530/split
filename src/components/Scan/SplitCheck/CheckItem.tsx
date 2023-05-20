@@ -14,6 +14,7 @@ import {
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { ReceiptItem } from "../../../models/receiptItem";
 
 interface CheckItemProps {
@@ -191,12 +192,6 @@ export function CheckItem({
           </ListItem>
         </List>
       ) : (
-        // <Box sx={{ display: "flex", alignItems: "center" }}>
-
-        //   <Typography>*</Typography>
-
-        //   <Typography>= {totalPrice}</Typography>
-        // </Box>
         <List>
           {Array.from(Array(item.quantity).keys()).map((index) => (
             <Fragment key={`${item.id}-${index}`}>
@@ -214,12 +209,14 @@ export function CheckItem({
                         label={name}
                         variant={containCurrentBuyer ? "filled" : "outlined"}
                         deleteIcon={
-                          containCurrentBuyer ? <DoneIcon /> : undefined
+                          containCurrentBuyer ? (
+                            <DoneIcon />
+                          ) : (
+                            <Box sx={{ width: "1em", height: "1em" }} />
+                          )
                         }
-                        onDelete={
-                          containCurrentBuyer
-                            ? () => handleAddBuyerNameToItem(item, name, index)
-                            : undefined
+                        onDelete={() =>
+                          handleAddBuyerNameToItem(item, name, index)
                         }
                         onClick={() =>
                           handleAddBuyerNameToItem(item, name, index)

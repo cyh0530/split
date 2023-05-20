@@ -12,8 +12,12 @@ export default {
   decorators: [
     (Story, context) => {
       const [receiptState, setReceiptState] = useState<Receipt>(fakeReceipt);
+      const [, setDisableNextStep] = useState(true);
+      const [, setDisablePrevStep] = useState(false);
       context.args.receipt = receiptState;
       context.args.setReceipt = setReceiptState;
+      context.args.setDisablePrevStep = setDisablePrevStep;
+      context.args.setDisableNextStep = setDisableNextStep;
       return (
         <Box
           sx={({ breakpoints }) => ({
@@ -21,7 +25,6 @@ export default {
             maxWidth: breakpoints.values.sm,
           })}
         >
-          {" "}
           <Story />
         </Box>
       );
