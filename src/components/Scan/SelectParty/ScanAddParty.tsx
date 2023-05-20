@@ -144,25 +144,6 @@ export function ScanAddParty({
                 <CloseIcon />
               </IconButton>
             </Box>
-            <Box sx={{ flex: 1, overflow: "auto" }}>
-              <List dense disablePadding>
-                {allNames.map((name) => (
-                  <ListItem key={name} disableGutters>
-                    <ListItemButton onClick={() => handleSetNewParty(name)}>
-                      <ListItemIcon>
-                        <Checkbox
-                          edge="start"
-                          checked={newParty.indexOf(name) !== -1}
-                          tabIndex={-1}
-                          disableRipple
-                        />
-                      </ListItemIcon>
-                      <ListItemText primary={name} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
             <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
               <TextField
                 size="small"
@@ -185,6 +166,25 @@ export function ScanAddParty({
                   Add
                 </Button>
               </Box>
+            </Box>
+            <Box sx={{ flex: 1, overflow: "auto" }}>
+              <List dense disablePadding>
+                {allNames.map((name) => (
+                  <ListItem key={name} disableGutters>
+                    <ListItemButton onClick={() => handleSetNewParty(name)}>
+                      <ListItemIcon>
+                        <Checkbox
+                          edge="start"
+                          checked={newParty.indexOf(name) !== -1}
+                          tabIndex={-1}
+                          disableRipple
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
             </Box>
             <Button variant="contained" onClick={handleSave}>
               Save
