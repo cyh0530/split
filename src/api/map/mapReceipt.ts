@@ -1,6 +1,6 @@
 import { Receipt } from "../../models";
 import { ReceiptResult } from "../generated/data-contracts";
-import { calculateReceiptSubTotal, calculateReceiptTotal, generateId, round } from "../../utils";
+import { generateId, round } from "../../utils";
 
 export function mapReceipt(receiptResponse: ReceiptResult): Receipt {
     const receipt: Receipt = {
