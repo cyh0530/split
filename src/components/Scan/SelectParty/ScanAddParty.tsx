@@ -3,6 +3,8 @@ import {
   Box,
   Button,
   Checkbox,
+  Dialog,
+  DialogTitle,
   IconButton,
   List,
   ListItem,
@@ -11,13 +13,11 @@ import {
   ListItemText,
   Snackbar,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { usePartyLocalStorage } from "../../../hooks/usePartyLocalStorage";
 import _ from "lodash";
-import { CenterModal } from "../../CenterModal";
 import { listContainsIgnoreCase } from "@/utils/listContainsIgnoreCase";
 
 interface ScanAddPartyProps {
@@ -118,80 +118,76 @@ export function ScanAddParty({
 
   return (
     <>
-      <CenterModal open={open}>
+      <Dialog open={open} fullWidth maxWidth="sm">
         <Box
           sx={{
+            position: "relative",
+            padding: "10px",
+            paddingTop: "0px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
             height: "600px",
             maxHeight: "100%",
+            overflow: "scroll",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              height: "100%",
-              overflow: "scroll",
-              width: "100%",
-            }}
-          >
-            <Box sx={{ textAlign: "center", position: "relative" }}>
-              <Typography variant="h6">Who is splitting the check</Typography>
-              <IconButton
-                sx={{ position: "absolute", right: 0, top: 0, padding: "5px" }}
-                onClick={handleCloseModal}
-              >
-                <CloseIcon />
-              </IconButton>
+          <DialogTitle>
+            Who is splitting the check
+            <IconButton
+              sx={{ position: "absolute", right: 8, top: 12 }}
+              onClick={handleCloseModal}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+            <TextField
+              size="small"
+              value={newName}
+              helperText={addHelperText}
+              error={addError}
+              onChange={(e) => {
+                setNewName(e.target.value);
+                resetAddError();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleAddName();
+                }
+              }}
+              placeholder="Add Name"
+            />
+            <Box>
+              <Button variant="outlined" onClick={handleAddName}>
+                Add
+              </Button>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-              <TextField
-                size="small"
-                value={newName}
-                helperText={addHelperText}
-                error={addError}
-                onChange={(e) => {
-                  setNewName(e.target.value);
-                  resetAddError();
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAddName();
-                  }
-                }}
-                placeholder="Add Name"
-              />
-              <Box>
-                <Button variant="outlined" onClick={handleAddName}>
-                  Add
-                </Button>
-              </Box>
-            </Box>
-            <Box sx={{ flex: 1, overflow: "auto" }}>
-              <List dense disablePadding>
-                {allNames.map((name) => (
-                  <ListItem key={name} disableGutters>
-                    <ListItemButton onClick={() => handleSetNewParty(name)}>
-                      <ListItemIcon>
-                        <Checkbox
-                          edge="start"
-                          checked={newParty.indexOf(name) !== -1}
-                          tabIndex={-1}
-                          disableRipple
-                        />
-                      </ListItemIcon>
-                      <ListItemText primary={name} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-            <Button variant="contained" onClick={handleSave}>
-              Save
-            </Button>
           </Box>
+          <Box sx={{ flex: 1, overflow: "auto" }}>
+            <List dense disablePadding>
+              {allNames.map((name) => (
+                <ListItem key={name} disableGutters>
+                  <ListItemButton onClick={() => handleSetNewParty(name)}>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={newParty.indexOf(name) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={name} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+          <Button variant="contained" onClick={handleSave}>
+            Save
+          </Button>
         </Box>
-      </CenterModal>
+      </Dialog>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",

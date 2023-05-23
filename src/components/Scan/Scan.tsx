@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
-  Box,
   CircularProgress,
   Container,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Snackbar,
-  Typography,
 } from "@mui/material";
 import _ from "lodash";
 import { ScanSteps } from "./ScanSteps";
@@ -18,7 +20,6 @@ import { Receipt, emptyReceipt } from "../../models/receipt";
 import { calculateSplitCheck } from "../../utils/calculateSplitCheck";
 import { uploadReceipt } from "../../api/uploadReceipt";
 import { SnackbarContent } from "../../models/snackbar";
-import { CenterModal } from "../CenterModal";
 import { healthCheck } from "../../api/healthCheck";
 import { Link } from "react-router-dom";
 
@@ -190,24 +191,22 @@ export function Scan() {
       >
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
-      <CenterModal open={isUploadingReceipt}>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Parsing receipt...
-          </Typography>
+      <Dialog open={isUploadingReceipt} fullWidth maxWidth="sm">
+        <DialogTitle sx={{ textAlign: "center" }}>
+          Parsing receipt...
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: "center" }}>
           <CircularProgress />
-        </Box>
-      </CenterModal>
-      <CenterModal open={isUnhealthy}>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6">
-            Sorry, the service is not available
-          </Typography>
-          <Typography variant="body1">
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isUnhealthy} fullWidth maxWidth="sm">
+        <DialogTitle>Sorry, the service is not available</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
             Please use <Link to="/manual">this page</Link> to split the check
-          </Typography>
-        </Box>
-      </CenterModal>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 }
