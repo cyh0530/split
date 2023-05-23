@@ -43,12 +43,10 @@ export function ScanSplitCheck({
   setDisableNextStep,
   setDisablePrevStep,
 }: ScanSplitCheckProps) {
-  // const [firstTimeLoaded]
   const [isEdit, setIsEdit] = useState(false);
   const [disableFinishEditBtn, setDisableFinishEditBtn] = useState(false);
   const [editingReceipt, setEditingReceipt] = useState<Receipt>(receipt);
   const [showWarning, setShowWarning] = useState(false);
-  const [warningMessage, setWarningMessage] = useState<ReactNode[]>([]);
 
   useEffect(() => {
     let someItemNotSelected = false;
@@ -192,6 +190,7 @@ export function ScanSplitCheck({
     const calculatedTotal = calculateReceiptTotal(receipt);
     if (calculatedTotal !== receipt.totalPrice) {
       setShowWarning(true);
+      setDisableNextStep(true)
      }
   }, [receipt]);
 

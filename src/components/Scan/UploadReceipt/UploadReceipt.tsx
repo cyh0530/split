@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScanContainer } from "../ScanContainer";
 
 interface UploadReceiptProps {
@@ -22,11 +22,12 @@ export function UploadReceipt({
       let file = e.target.files[0];
       setFile(file);
       setImage(URL.createObjectURL(file));
-      setDisableNextStep(false);
-    } else {
-      setDisableNextStep(true);
     }
   };
+
+  useEffect(() => {
+    setDisableNextStep(image === "")
+  }, [image])
 
   return (
     <ScanContainer title="Upload Receipt">
