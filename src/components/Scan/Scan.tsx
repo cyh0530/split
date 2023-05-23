@@ -51,7 +51,7 @@ export function Scan() {
     const nextReceipt = _.cloneDeep(receipt);
     nextReceipt.items.forEach((item) => {
       const quantity = item.quantity;
-      item.buyers = Array.from({ length: quantity }, () => []);
+      item.buyers = Array.from({ length: quantity }, () => new Set<string>());
     });
     setReceipt(nextReceipt);
   }, [receipt, setReceipt]);

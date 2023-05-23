@@ -14,7 +14,6 @@ import {
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { ReceiptItem } from "../../../models/receiptItem";
 
 interface CheckItemProps {
@@ -27,12 +26,17 @@ interface CheckItemProps {
     newUnitPrice: number,
     newQuantity: number
   ) => void;
-  handleAddBuyerNameToItem: (
+  onAddBuyerNameToItem: (
     item: ReceiptItem,
     name: string,
     index: number
   ) => void;
-  handleDelete: (itemId: string) => void;
+  onRemoveBuyerNameFromItem: (
+    item: ReceiptItem,
+    name: string,
+    index: number
+  ) => void;
+  onDelete: (itemId: string) => void;
 }
 
 function isValidItemName(itemName: string) {
@@ -48,8 +52,9 @@ export function CheckItem({
   party,
   isEdit,
   updateItem,
-  handleAddBuyerNameToItem,
-  handleDelete,
+  onAddBuyerNameToItem,
+  onRemoveBuyerNameFromItem,
+  onDelete,
 }: CheckItemProps) {
   const [itemNameError, setItemNameError] = useState(false);
   const [unitPriceError, setUnitPriceError] = useState(false);
@@ -101,6 +106,21 @@ export function CheckItem({
     }
   };
 
+  const isAllNameSelected = (index: number) =>
+    item.buyers[index].size === party.length;
+
+  const handleSelectAll = (index: number) => {
+    for (const name of party) {
+      onAddBuyerNameToItem(item, name, index);
+    }
+  };
+
+  const handleDeselectAll = (index: number) => {
+    for (const name of party) {
+      onRemoveBuyerNameFromItem(item, name, index);
+    }
+  };
+
   return (
     <>
       <ListItem>
@@ -119,16 +139,18 @@ export function CheckItem({
                   multiline
                 />
                 <Box>
-                  <IconButton onClick={() => handleDelete(item.id)}>
+                  <IconButton onClick={() => onDelete(item.id)}>
                     <DeleteIcon />
                   </IconButton>
                 </Box>
               </>
             ) : (
               <>
-                <Typography>
-                  {`${item.name} ($${item.unitPrice} * ${item.quantity})`}
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography>
+                    {`${item.name} ($${item.unitPrice} * ${item.quantity})`}
+                  </Typography>
+                </Box>
                 <Typography sx={{ fontWeight: "bold" }}>
                   ${totalPrice}
                 </Typography>
@@ -200,9 +222,18 @@ export function CheckItem({
                   <FastfoodIcon />
                 </ListItemIcon>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  <Chip
+                    label="Everyone"
+                    color="info"
+                    variant={isAllNameSelected(index) ? "filled" : "outlined"}
+                    onClick={
+                      isAllNameSelected(index)
+                        ? () => handleDeselectAll(index)
+                        : () => handleSelectAll(index)
+                    }
+                  />
                   {party.map((name) => {
-                    const containCurrentBuyer =
-                      item.buyers[index].includes(name);
+                    const containCurrentBuyer = item.buyers[index].has(name);
                     return (
                       <Chip
                         key={name}
@@ -216,10 +247,14 @@ export function CheckItem({
                           )
                         }
                         onDelete={() =>
-                          handleAddBuyerNameToItem(item, name, index)
+                          containCurrentBuyer
+                            ? onRemoveBuyerNameFromItem(item, name, index)
+                            : onAddBuyerNameToItem(item, name, index)
                         }
                         onClick={() =>
-                          handleAddBuyerNameToItem(item, name, index)
+                          containCurrentBuyer
+                            ? onRemoveBuyerNameFromItem(item, name, index)
+                            : onAddBuyerNameToItem(item, name, index)
                         }
                       />
                     );

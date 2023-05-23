@@ -4,6 +4,6 @@ export type ReceiptItem = {
     quantity: number;
     unitPrice: number;
     totalPrice: number;
-    buyers: string[][];
+    buyers: Set<string>[];
     note?: string;
 }

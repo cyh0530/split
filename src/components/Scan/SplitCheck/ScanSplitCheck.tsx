@@ -46,7 +46,7 @@ export function ScanSplitCheck({
     let someItemNotSelected = false;
     receipt.items.forEach((item) => {
       item.buyers.forEach((unitBuyers) => {
-        if (unitBuyers.length === 0) {
+        if (unitBuyers.size === 0) {
           someItemNotSelected = true;
         }
       });
@@ -64,12 +64,20 @@ export function ScanSplitCheck({
     const itemId = item.id;
     const itemIndex = nextReceipt.items.findIndex((item) => item.id === itemId);
     const buyers = nextReceipt.items[itemIndex].buyers;
-    const nameIndex = buyers[index].indexOf(name);
-    if (nameIndex !== -1) {
-      buyers[index].splice(nameIndex, 1);
-    } else {
-      buyers[index].push(name);
-    }
+    buyers[index].add(name);
+    setReceipt(nextReceipt);
+  };
+
+  const handleRemoveBuyerNameFromItem = (
+    item: ReceiptItem,
+    name: string,
+    index: number
+  ) => {
+    const nextReceipt = Object.assign({}, receipt);
+    const itemId = item.id;
+    const itemIndex = nextReceipt.items.findIndex((item) => item.id === itemId);
+    const buyers = nextReceipt.items[itemIndex].buyers;
+    buyers[index].delete(name);
     setReceipt(nextReceipt);
   };
 
@@ -111,7 +119,7 @@ export function ScanSplitCheck({
       currentItem.buyers = currentItem.buyers.slice(0, newQuantity);
     } else if (newQuantity > currentItem.buyers.length) {
       for (let i = currentItem.buyers.length; i < newQuantity; i++) {
-        currentItem.buyers.push([]);
+        currentItem.buyers.push(new Set<string>());
       }
     }
 
@@ -209,8 +217,9 @@ export function ScanSplitCheck({
             isEdit={isEdit}
             party={party}
             updateItem={updateItem}
-            handleAddBuyerNameToItem={handleAddBuyerNameToItem}
-            handleDelete={handleDeleteItem}
+            onAddBuyerNameToItem={handleAddBuyerNameToItem}
+            onRemoveBuyerNameFromItem={handleRemoveBuyerNameFromItem}
+            onDelete={handleDeleteItem}
           />
         ))}
         {isEdit && (
