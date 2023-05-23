@@ -14,7 +14,6 @@ export default {
       const [receiptState, setReceiptState] = useState<Receipt>(fakeReceipt);
       const [, setDisableNextStep] = useState(true);
       const [, setDisablePrevStep] = useState(false);
-      context.args.receipt = receiptState;
       context.args.setReceipt = setReceiptState;
       context.args.setDisablePrevStep = setDisablePrevStep;
       context.args.setDisableNextStep = setDisableNextStep;
@@ -30,12 +29,24 @@ export default {
       );
     },
   ],
+  args: {
+    party: fakeParties[0],
+    receipt: fakeReceipt
+  }
 } as Meta<typeof ScanSplitCheck>;
 
 type Story = StoryObj<typeof ScanSplitCheck>;
 
 export const Primary: Story = {
-  args: {
-    party: fakeParties[0],
-  },
+
 };
+
+export const WrongTotal: Story = {
+  args: {
+    receipt: {
+      ...fakeReceipt,
+      subTotal: 120,
+      totalPrice: 100
+    }
+  }
+}

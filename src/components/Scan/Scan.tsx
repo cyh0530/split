@@ -91,6 +91,8 @@ export function Scan() {
     }
   };
 
+  const goToPrevStep = () => setCurrentStep(currentStep - 1);
+
   const reset = () => {
     setCurrentStep(0);
     setDisableNextStep(true);
@@ -141,7 +143,6 @@ export function Scan() {
     callHeatlhCheck();
   }, []);
 
-  const goToPrevStep = () => setCurrentStep(currentStep - 1);
   return (
     <Container maxWidth="sm" disableGutters>
       {currentStep === 0 && (

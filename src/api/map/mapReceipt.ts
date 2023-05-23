@@ -17,7 +17,6 @@ export function mapReceipt(receiptResponse: ReceiptResult): Receipt {
         tax: receiptResponse.tax,
         totalPrice: receiptResponse.total
     }
-    receipt.subTotal = calculateReceiptSubTotal(receipt)
-    receipt.totalPrice = calculateReceiptTotal(receipt)
+    
     return receipt
 }

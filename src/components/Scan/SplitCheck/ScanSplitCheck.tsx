@@ -1,6 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import {
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   List,
   ListItem,
@@ -38,9 +43,12 @@ export function ScanSplitCheck({
   setDisableNextStep,
   setDisablePrevStep,
 }: ScanSplitCheckProps) {
+  // const [firstTimeLoaded]
   const [isEdit, setIsEdit] = useState(false);
   const [disableFinishEditBtn, setDisableFinishEditBtn] = useState(false);
   const [editingReceipt, setEditingReceipt] = useState<Receipt>(receipt);
+  const [showWarning, setShowWarning] = useState(false);
+  const [warningMessage, setWarningMessage] = useState<ReactNode[]>([]);
 
   useEffect(() => {
     let someItemNotSelected = false;
@@ -170,11 +178,6 @@ export function ScanSplitCheck({
     [setEditingReceipt, checkReceiptValidity]
   );
 
-  useEffect(() => {
-    // auto correct sub total and total
-    updateReceipt(receipt);
-  }, [updateReceipt, receipt]);
-
   const onFinishEditing = () => {
     setReceipt(editingReceipt);
     setIsEdit(false);
@@ -184,6 +187,13 @@ export function ScanSplitCheck({
     setEditingReceipt(receipt);
     setIsEdit(false);
   };
+
+  useEffect(() => {
+    const calculatedTotal = calculateReceiptTotal(receipt);
+    if (calculatedTotal !== receipt.totalPrice) {
+      setShowWarning(true);
+     }
+  }, [receipt]);
 
   return (
     <ScanContainer title="Split the Check">
@@ -200,11 +210,11 @@ export function ScanSplitCheck({
             onDelete={handleDeleteItem}
           />
         ))}
-        {isEdit && (
-          <ListItemButton onClick={handleAddItem}>
-            <Typography color="text.secondary">+ Add Item</Typography>
-          </ListItemButton>
-        )}
+
+        <ListItemButton onClick={handleAddItem}>
+          <Typography color="text.secondary">+ Add Item</Typography>
+        </ListItemButton>
+
         <ListItem dense>
           <ListItemText disableTypography>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -295,6 +305,25 @@ export function ScanSplitCheck({
           </Box>
         )}
       </Box>
+      <Dialog open={showWarning}>
+        <DialogTitle>Warning</DialogTitle>
+        <DialogContent>
+          <Typography>
+            <b>Total</b> didn't add up correctly. Please check the <b>price</b>{" "}
+            and <b>quantity</b> for each item, <b>subtotal</b>, <b>tax</b>, and{" "}
+            <b>tip</b>.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setShowWarning(false);
+            }}
+          >
+            Got it!
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ScanContainer>
   );
 }
