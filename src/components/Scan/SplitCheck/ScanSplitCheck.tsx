@@ -186,30 +186,8 @@ export function ScanSplitCheck({
   };
 
   return (
-    <ScanContainer
-      title="Split the Check"
-      titleIcon={
-        !isEdit ? (
-          <IconButton onClick={() => setIsEdit(true)}>
-            <EditIcon />
-          </IconButton>
-        ) : (
-          <Box display="flex" gap="1">
-            <IconButton
-              disabled={disableFinishEditBtn}
-              color="success"
-              onClick={onFinishEditing}
-            >
-              <CheckIcon />
-            </IconButton>
-            <IconButton color="error" onClick={onCancelEditing}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        )
-      }
-    >
-      <List>
+    <ScanContainer title="Split the Check">
+      <List sx={{ pb: "50px" }}>
         {editingReceipt.items.map((item) => (
           <CheckItem
             key={item.id}
@@ -262,6 +240,61 @@ export function ScanSplitCheck({
           </ListItemText>
         </ListItem>
       </List>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 70,
+          right: 20,
+        }}
+      >
+        {!isEdit ? (
+          <IconButton
+            sx={{
+              bgcolor: "primary.main",
+              color: "white",
+              p: 2,
+              "&:hover": {
+                bgcolor: "primary.dark",
+              },
+            }}
+            onClick={() => setIsEdit(true)}
+          >
+            <EditIcon />
+          </IconButton>
+        ) : (
+          <Box display="flex" gap={1}>
+            <IconButton
+              sx={{
+                bgcolor: "success.main",
+                color: "white",
+                p: 2,
+                "&:hover": {
+                  bgcolor: "success.dark",
+                },
+              }}
+              disabled={disableFinishEditBtn}
+              color="success"
+              onClick={onFinishEditing}
+            >
+              <CheckIcon />
+            </IconButton>
+            <IconButton
+              sx={{
+                bgcolor: "error.main",
+                color: "white",
+                p: 2,
+                "&:hover": {
+                  bgcolor: "error.dark",
+                },
+              }}
+              color="error"
+              onClick={onCancelEditing}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        )}
+      </Box>
     </ScanContainer>
   );
 }
