@@ -190,8 +190,8 @@ export function ScanSplitCheck({
     const calculatedTotal = calculateReceiptTotal(receipt);
     if (calculatedTotal !== receipt.totalPrice) {
       setShowWarning(true);
-      setDisableNextStep(true)
-     }
+      setDisableNextStep(true);
+    }
   }, [receipt]);
 
   return (
@@ -209,10 +209,11 @@ export function ScanSplitCheck({
             onDelete={handleDeleteItem}
           />
         ))}
-
-        <ListItemButton onClick={handleAddItem}>
-          <Typography color="text.secondary">+ Add Item</Typography>
-        </ListItemButton>
+        {isEdit && (
+          <ListItemButton onClick={handleAddItem}>
+            <Typography color="text.secondary">+ Add Item</Typography>
+          </ListItemButton>
+        )}
 
         <ListItem dense>
           <ListItemText disableTypography>
