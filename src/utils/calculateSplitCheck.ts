@@ -5,11 +5,10 @@ import { SplitCheck } from "../models/splitCheck";
 import { round } from "./round";
 import { calculateItemSubTotal, calculateReceiptSubTotal } from "./calculate";
 
-function createNote(buyer: string, allBuyers: string[]) {
+function createNote(buyer: string, allBuyers: Set<string>) {
   const allBuyersCopy = _.cloneDeep(allBuyers)
-  const buyerIndex = allBuyersCopy.indexOf(buyer)
-  allBuyersCopy.splice(buyerIndex, 1)
-  return `Shared with ${allBuyersCopy.join(", ")}`
+  allBuyersCopy.delete(buyer)
+  return `Shared with ${Array.from(allBuyersCopy).join(", ")}`
 }
 
 export function calculateSplitCheck(
@@ -23,7 +22,7 @@ export function calculateSplitCheck(
     const buyers = item.buyers;
     buyers.forEach((unitBuyers) => {
       unitBuyers.forEach((buyerName) => {
-        const quantity = round(1 / unitBuyers.length);
+        const quantity = round(1 / unitBuyers.size);
         const totalPrice = round(item.unitPrice * quantity);
         const note = createNote(buyerName, unitBuyers)
         const buyerItem: ReceiptItem = {
@@ -33,7 +32,7 @@ export function calculateSplitCheck(
           unitPrice: item.unitPrice,
           totalPrice: totalPrice,
           buyers: [unitBuyers],
-          note: unitBuyers.length > 1 ? note : undefined,
+          note: unitBuyers.size > 1 ? note : undefined,
         };
         if (!(buyerName in nameToItemsMap)) {
           nameToItemsMap[buyerName] = []

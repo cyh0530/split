@@ -10,7 +10,7 @@ export function mapReceipt(receiptResponse: ReceiptResult): Receipt {
             quantity: item.quantity,
             unitPrice: item.unit_price,
             totalPrice: round(item.quantity * item.unit_price),
-            buyers: Array.from({length: item.quantity}, () => [])
+            buyers: Array.from({length: item.quantity}, () => new Set<string>())
         })),
         subTotal: receiptResponse.subtotal,
         tip: receiptResponse.tip,
