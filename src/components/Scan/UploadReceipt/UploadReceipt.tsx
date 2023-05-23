@@ -1,8 +1,6 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
 import { ScanContainer } from "../ScanContainer";
-import { convertHeic } from "../../../utils/convertHeic";
-import { CenterModal } from "../../CenterModal";
 
 interface UploadReceiptProps {
   file: File | null;
@@ -18,19 +16,10 @@ export function UploadReceipt({
   const [image, setImage] = useState<string>(
     file ? URL.createObjectURL(file) : ""
   );
-  const [isConvertingImage, setIsConvertingImage] = useState(false)
 
   const handleOnChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       let file = e.target.files[0];
-      if (file.type === "image/heic" || file.type === "image/heif") {
-        setIsConvertingImage(true)
-        const convertedImage = await convertHeic(file);
-        if (convertedImage) {
-          file = new File([convertedImage], file.name);
-        }
-        setIsConvertingImage(false)
-      }
       setFile(file);
       setImage(URL.createObjectURL(file));
       setDisableNextStep(false);
@@ -68,14 +57,6 @@ export function UploadReceipt({
           />
         </Button>
       </Box>
-      <CenterModal open={isConvertingImage}>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Converting image...
-          </Typography>
-          <CircularProgress />
-        </Box>
-      </CenterModal>
     </ScanContainer>
   );
 }
