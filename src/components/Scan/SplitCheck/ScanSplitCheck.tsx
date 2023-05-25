@@ -16,6 +16,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import WarningIcon from "@mui/icons-material/Warning";
 import _ from "lodash";
 import { Receipt, ReceiptItem } from "../../../models";
 import { CheckItem } from "./CheckItem";
@@ -88,6 +89,7 @@ export function ScanSplitCheck({
   };
 
   const handleAddItem = () => {
+    setIsEdit(true);
     const nextReceipt = _.cloneDeep(editingReceipt);
     nextReceipt.items.push({
       id: generateId(),
@@ -192,11 +194,11 @@ export function ScanSplitCheck({
       setShowWarning(true);
       setDisableNextStep(true);
     }
-  }, [receipt]);
+  }, []);
 
   return (
     <ScanContainer title="Split the Check">
-      <List sx={{ pb: "50px" }}>
+      <List sx={{ pb: "60px" }}>
         {editingReceipt.items.map((item) => (
           <CheckItem
             key={item.id}
@@ -210,11 +212,11 @@ export function ScanSplitCheck({
             onDelete={handleDeleteItem}
           />
         ))}
-        {isEdit && (
-          <ListItemButton onClick={handleAddItem}>
-            <Typography color="text.secondary">+ Add Item</Typography>
-          </ListItemButton>
-        )}
+
+        <ListItemButton onClick={handleAddItem}>
+          <Typography color="text.secondary">+ Add Item</Typography>
+        </ListItemButton>
+
 
         <ListItem dense>
           <ListItemText disableTypography>
@@ -307,7 +309,12 @@ export function ScanSplitCheck({
         )}
       </Box>
       <Dialog open={showWarning}>
-        <DialogTitle>Warning</DialogTitle>
+        <DialogTitle>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <WarningIcon color="warning" />
+            Warning
+          </Box>
+        </DialogTitle>
         <DialogContent>
           <Typography>
             <b>Total</b> didn't add up correctly. Please check the <b>price</b>{" "}

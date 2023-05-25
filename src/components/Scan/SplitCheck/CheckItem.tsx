@@ -141,7 +141,7 @@ export function CheckItem({
                   size="small"
                   variant="standard"
                   onChange={handleItemChange}
-                  multiline
+                  autoFocus
                 />
                 <Box>
                   <IconButton onClick={() => onDelete(item.id)}>
