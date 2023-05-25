@@ -321,7 +321,7 @@ export function ScanSplitCheck({
               setShowWarning(false);
             }}
           >
-            Got it!
+            Got it
           </Button>
         </DialogActions>
       </Dialog>
