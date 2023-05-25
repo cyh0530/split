@@ -20,6 +20,7 @@ interface CheckItemProps {
   item: ReceiptItem;
   party: string[];
   isEdit: boolean;
+  setDisableFinishEditBtn: React.Dispatch<React.SetStateAction<boolean>>;
   updateItem: (
     id: string,
     newItemName: string,
@@ -52,6 +53,7 @@ export function CheckItem({
   party,
   isEdit,
   updateItem,
+  setDisableFinishEditBtn,
   onAddBuyerNameToItem,
   onRemoveBuyerNameFromItem,
   onDelete,
@@ -103,6 +105,9 @@ export function CheckItem({
       var totalPrice = parseFloat((newUnitPrice * newQuantity).toFixed(2));
       setTotalPrice(totalPrice);
       updateItem(item.id, newItemName, newUnitPrice, newQuantity);
+      setDisableFinishEditBtn(false)
+    } else {
+      setDisableFinishEditBtn(true)
     }
   };
 

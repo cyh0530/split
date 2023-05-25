@@ -204,6 +204,7 @@ export function ScanSplitCheck({
             isEdit={isEdit}
             party={party}
             updateItem={updateItem}
+            setDisableFinishEditBtn={setDisableFinishEditBtn}
             onAddBuyerNameToItem={handleAddBuyerNameToItem}
             onRemoveBuyerNameFromItem={handleRemoveBuyerNameFromItem}
             onDelete={handleDeleteItem}
