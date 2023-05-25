@@ -156,7 +156,7 @@ export function ScanSplitCheck({
           disableFinishBtn = true;
         }
       });
-      if (receipt.tax <= 0 || receipt.tip <= 0) {
+      if (receipt.tax < 0 || receipt.tip < 0) {
         disableFinishBtn = true;
       }
       setDisableFinishEditBtn(disableFinishBtn);
