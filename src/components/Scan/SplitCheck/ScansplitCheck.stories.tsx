@@ -14,6 +14,7 @@ export default {
       const [receiptState, setReceiptState] = useState<Receipt>(fakeReceipt);
       const [, setDisableNextStep] = useState(true);
       const [, setDisablePrevStep] = useState(false);
+      context.args.receipt = receiptState;
       context.args.setReceipt = setReceiptState;
       context.args.setDisablePrevStep = setDisablePrevStep;
       context.args.setDisableNextStep = setDisableNextStep;
@@ -42,11 +43,31 @@ export const Primary: Story = {
 };
 
 export const WrongTotal: Story = {
-  args: {
-    receipt: {
-      ...fakeReceipt,
-      subTotal: 120,
-      totalPrice: 100
-    }
-  }
+  decorators: [
+    (Story, context) => {
+      const incorrectTotalReceipt = {
+        ...fakeReceipt,
+        subTotal: 120,
+        totalPrice: 100
+      }
+
+      const [receiptState, setReceiptState] = useState<Receipt>(incorrectTotalReceipt);
+      const [, setDisableNextStep] = useState(true);
+      const [, setDisablePrevStep] = useState(false);
+      context.args.receipt = receiptState;
+      context.args.setReceipt = setReceiptState;
+      context.args.setDisablePrevStep = setDisablePrevStep;
+      context.args.setDisableNextStep = setDisableNextStep;
+      return (
+        <Box
+          sx={({ breakpoints }) => ({
+            margin: "auto",
+            maxWidth: breakpoints.values.sm,
+          })}
+        >
+          <Story />
+        </Box>
+      );
+    },
+  ]
 }
