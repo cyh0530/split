@@ -58,7 +58,7 @@ export function ScanSplitCheck({
         }
       });
     });
-    setDisableNextStep(isEdit || someItemNotSelected);
+    setDisableNextStep(isEdit || someItemNotSelected || receipt.items.length === 0);
     setDisablePrevStep(isEdit);
   }, [isEdit, receipt, setDisableNextStep, setDisablePrevStep]);
 

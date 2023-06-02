@@ -19,6 +19,8 @@ interface ScanResultProps {
   splitCheck: SplitCheck[];
 }
 
+const navigatorShareIsDefined = !!navigator.share
+
 export function ScanResult({ splitCheck }: ScanResultProps) {
   let total = 0;
   splitCheck.forEach((check) => {
@@ -27,8 +29,11 @@ export function ScanResult({ splitCheck }: ScanResultProps) {
   total = round(total);
 
   const handleShare = () => {
-    const shareData = buildShareContent(splitCheck);
-    navigator.share(shareData);
+    if (!!navigator.share)
+    {
+      const shareData = buildShareContent(splitCheck);
+      navigator.share(shareData);
+    }
   };
 
   return (
@@ -55,16 +60,19 @@ export function ScanResult({ splitCheck }: ScanResultProps) {
           width: "100%",
         }}
       >
-        <Box>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleShare}
-            startIcon={<ReplyIcon sx={{ transform: "rotateY(180deg)" }} />}
-          >
-            Share
-          </Button>
-        </Box>
+        {navigatorShareIsDefined && (
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleShare}
+              startIcon={<ReplyIcon sx={{ transform: "rotateY(180deg)" }} />}
+            >
+              Share
+            </Button>
+          </Box>
+        )}
+
         <Box>
           <a
             href="https://www.buymeacoffee.com/cyh0530"
