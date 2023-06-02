@@ -41,11 +41,8 @@ export function Home() {
               </Box>
             </Box>
             <Link to="/scan">
-              <Button variant="contained" color="primary">
-                <Box sx={{ display: "flex", gap: 1 }}>
+              <Button variant="contained" color="primary" endIcon={<KeyboardArrowRightIcon />}>
                   Get Started
-                  <KeyboardArrowRightIcon />
-                </Box>
               </Button>
             </Link>
           </Box>

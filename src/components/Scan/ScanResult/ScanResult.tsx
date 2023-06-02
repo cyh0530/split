@@ -27,9 +27,9 @@ export function ScanResult({ splitCheck }: ScanResultProps) {
   total = round(total);
 
   const handleShare = () => {
-    const shareData = buildShareContent(splitCheck)
-    navigator.share(shareData)
-  }
+    const shareData = buildShareContent(splitCheck);
+    navigator.share(shareData);
+  };
 
   return (
     <ScanContainer title="Result">
@@ -56,11 +56,13 @@ export function ScanResult({ splitCheck }: ScanResultProps) {
         }}
       >
         <Box>
-          <Button variant="contained" color="primary" onClick={handleShare}>
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <ReplyIcon sx={{ transform: "rotateY(180deg)" }} />
-              <Typography> Share</Typography>
-            </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleShare}
+            startIcon={<ReplyIcon sx={{ transform: "rotateY(180deg)" }} />}
+          >
+            Share
           </Button>
         </Box>
         <Box>

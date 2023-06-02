@@ -1,4 +1,5 @@
 import { Box, Button } from "@mui/material";
+import UploadIcon from "@mui/icons-material/Upload";
 import { useEffect, useState } from "react";
 import { ScanContainer } from "../ScanContainer";
 
@@ -26,8 +27,8 @@ export function UploadReceipt({
   };
 
   useEffect(() => {
-    setDisableNextStep(image === "")
-  }, [image])
+    setDisableNextStep(image === "");
+  }, [image]);
 
   return (
     <ScanContainer title="Upload Receipt">
@@ -48,7 +49,11 @@ export function UploadReceipt({
           textAlign: "center",
         }}
       >
-        <Button component="label" variant="contained">
+        <Button
+          component="label"
+          variant="contained"
+          size="large"
+        >
           {image === "" ? "Upload Receipt" : "Replace Receipt"}
           <input
             hidden
