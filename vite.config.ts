@@ -6,7 +6,6 @@ import svgrPlugin from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/split/",
   plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
   server: {
     port: 3000,
