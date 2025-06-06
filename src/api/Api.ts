@@ -2,15 +2,18 @@ import { ApiError } from "./ApiError";
 import { ApiConfig } from "./generated/http-client";
 
 export const apiConfg: ApiConfig = {
-    baseUrl: import.meta.env.VITE_API_URL || "https://receipt-split.azurewebsites.net",
-    customFetch: async (input, init) => {
-        const response = await fetch(input, init)
+  baseUrl:
+    import.meta.env.VITE_API_URL || "https://split-receipt.azurewebsites.net",
+  customFetch: async (input, init) => {
+    const response = await fetch(input, init);
 
-        if (!response.ok) {
-            const error = await response.text();
-            
-            return Promise.reject(new ApiError(error, response.status, input.toString()))
-        }
-        return response
-    },
-}
+    if (!response.ok) {
+      const error = await response.text();
+
+      return Promise.reject(
+        new ApiError(error, response.status, input.toString())
+      );
+    }
+    return response;
+  },
+};
